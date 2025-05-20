@@ -1,6 +1,6 @@
-package com.testing.Controller;
+package com.testing.controller;
 
-import com.testing.Entity.ProductEntity;
+import com.testing.entity.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
