@@ -1,0 +1,24 @@
+ <div class="custom-dropdown" [class.dropdown-open]="isDropdownOpen">
+  <input 
+  [ngStyle]="{
+    height: height
+  }" 
+    type="text"
+    class="form-control"
+    [placeholder]="placeholder"
+    [value]="selectedOption?.label || ''"
+    readonly
+    (click)="toggleDropdown()"
+  />
+  <div class="dropdown-menu" *ngIf="isDropdownOpen">
+    <div
+      class="dropdown-item"
+      *ngFor="let option of options"
+      (click)="selectOption(option)"
+      [class.selected]="option.value === selectedOption?.value"
+    >
+      {{ option.label }}
+    </div>
+  </div>
+</div>
+

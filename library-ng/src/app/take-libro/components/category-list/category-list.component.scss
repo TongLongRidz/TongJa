@@ -1,0 +1,33 @@
+.input-group {
+  position: relative;
+}
+
+.input-group-text {
+  position: absolute;
+  right: 40px; 
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.width-input {
+  width: 250px;
+}
+
+.action-btn {
+  width: 85px;
+  text-align: center;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.shadows-box {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.disble-form {
+  background-color: #e9ecef;
+  box-shadow: none;
+  border-color: #dee2e6;
+}

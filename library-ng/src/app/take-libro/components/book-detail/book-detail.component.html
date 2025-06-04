@@ -1,0 +1,456 @@
+<main class="container my-5 rounded bg-container">
+  <div class="row px-3 py-5 px-lg-0">
+    <div class="py-0" style="padding-inline: 65px">
+      <div class="d-flex row p-0 m-0 py-4 bg-white rounded">
+        <div class="col-12 col-lg-5 d-flex justify-content-center">
+          <div class="bg_book">
+            <!-- <img
+              class="border-img book-image"
+              data-bs-toggle="modal"
+              data-bs-target="#modalStart"
+              [src]="
+                bookDetail?.bookImage
+                  ? bookDetail?.bookImage
+                  : 'https://www.islamspk.com/committee/no-pict.png'
+              "
+              alt="Book Image"
+              style="height: 80%; width: auto"
+              (click)="openImageModal(bookDetail?.bookImage)"
+            /> -->
+            <div
+              class="d-flex book-image border-box-rgb justify-content-center p-3"
+              style="width: auto"
+            >
+              <!-- <img
+                class="border-img"
+                data-bs-toggle="modal"
+                data-bs-target="#modalStart"
+                [src]="
+                  bookDetail?.bookImage
+                    ? bookDetail?.bookImage
+                    : 'https://www.islamspk.com/committee/no-pict.png'
+                "
+                alt="Book Image"
+                style="max-height: 200px; min-height: 150px"
+                (click)="openImageModal(bookDetail?.bookImage)"
+              /> -->
+
+              <app-book-image-spinner
+                class="border-img cpnen-book-spinner1"
+                data-bs-toggle="modal"
+                data-bs-target="#modalStart"
+                [srcUrl]="bookDetail?.bookImage || 'onInput'"
+                altFrom="main details"
+                (click)="openImageModal(bookDetail?.bookImage)"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="col-12 col-lg-7 mt-3 m-lg-0 d-flex flex-column justify-content-around"
+        >
+          <div class="">
+            <div class="mb-2 f16 fw-bold">{{ bookDetail?.bookNameTh }}</div>
+            <div class="mb-2 f16 fw-bold">
+              {{ bookDetail?.bookNameEn }}
+            </div>
+            <div class="mb-2 f13">
+              {{ "category" | translate }} : {{ bookDetail?.categoryName }}
+            </div>
+            <div class="mb-2 f13">
+              {{ "bookCode" | translate }} : {{ bookDetail?.bookCode }}
+            </div>
+            <div class="f13">
+              {{ "totalBorrowing" | translate }} : {{ bookDetail?.totalBorrow }}
+            </div>
+          </div>
+          <div>
+            <hr class="me-4" />
+          </div>
+          <div class="d-flex justify-content-center justify-content-lg-start mb-2">
+            <button
+              class="btn btn-success classIndex opacity-100"
+              [ngStyle]="{
+                'background-color': bookDetail?.bookStatus === 0 ? '#6A9C89' : '#C8D0D1',
+                color: bookDetail?.bookStatus === 0 ? '' : '#000',
+                border: 'none'
+              }"
+              data-bs-toggle="modal"
+              [disabled]="bookDetail?.bookStatus === 1"
+              data-bs-target="#modalBorrowBook"
+              (click)="openModalResetValue()"
+            >
+              <span class="f16">{{ buttonName }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- table -->
+    <hr class="hr my-4" />
+    <div class="row col-12 p-0 m-0 px-3">
+      <!-- prettier-ignore -->
+      <div class="d-flex justify-content-end px-4 mb-2 f16 fw-bold showTable" (click)="showTable = !showTable">
+        {{ 'recentBorrowings' | translate}}
+        <span class="ms-2">
+          <i class="fa-solid" [ngClass]="showTable ? 'fa-caret-down' : 'fa-caret-up'"></i>
+        </span>
+      </div>
+      <div class="px-5">
+        <div
+          *ngIf="showTable && bookDetail?.borrowings?.length == 0"
+          class="d-flex justify-content-center align-items-center mb-3 mt-3"
+          style="height: 100%; background-color: #ffffff"
+        >
+          <app-not-found></app-not-found>
+        </div>
+        <div
+          *ngIf="showTable && bookDetail?.borrowings?.length !== 0"
+          class="table-responsive p-0 m-0 rounded"
+          style="max-height: 200px"
+        >
+          <table class="table table-striped p-0 m-0 rounded">
+            <thead class="sticky-top">
+              <!-- prettier-ignore -->
+              <tr>
+              <th class="text-center tbc" style="width: 5%">#</th>
+              <th class="text-truncate text-center tbc" style="width: 10%">{{ 'profile' | translate}}</th>
+              <th class="text-truncate tbc" style="width: 15%">{{ 'borrowerName' | translate}}</th>
+              <th class="text-center text-truncate tbc" style="width: 30%">{{ 'totalBorrowedDays' | translate}}</th>
+              <th class="text-truncate tbc" style="width: 40%">{{ 'borrowDateRange' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+              <!-- prettier-ignore -->
+              <tr *ngFor="let borrowing of bookDetail?.borrowings; let i = index">
+              <td class="text-center align-middle" style="height: 45px;">{{ i + 1 }}</td>
+              <td class="text-center align-middle"> 
+                <img class="rounded-circle" [src]="borrowing.profileImage ? borrowing.profileImage : './takeLibro/icon_user.png'" width="40px" height="40px">
+              </td>
+              <td class="text-truncate align-middle"> {{ borrowing.firstName }} {{ borrowing.lastName }} </td>
+              <td class="text-center text-truncate align-middle">{{ borrowing.borrowDays }} {{ 'day' | translate}}</td>
+              <td class="text-truncate align-middle">{{ formatDateService.forDate(borrowing.borrowStart, 'MAX', 'NO-TIME', getLanguages) }} {{ 'to' | translate}} {{ formatDateService.forDate(borrowing.borrowEnd, 'MAX', 'NO-TIME', getLanguages) }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <hr class="hr my-4" />
+    <!-- card horizontal slider here -->
+
+    <div class="row p-0 m-0">
+      <div class="col-12 p-0 m-0">
+        <div class="px-3">
+          <div
+            class="d-flex justify-content-end px-4 mb-2 f16 fw-bold showTable"
+            (click)="showRecommend = !showRecommend"
+          >
+            {{ "recommendedBooks" | translate }}
+            <span class="ms-2">
+              <i
+                class="fa-solid"
+                [ngClass]="showRecommend ? 'fa-caret-down' : 'fa-caret-up'"
+              ></i>
+            </span>
+          </div>
+        </div>
+        <!-- card -->
+        <div
+          *ngIf="showRecommend && bookRecommend?.length == 0"
+          class="d-flex justify-content-center"
+          style="padding: 0 63px"
+        >
+          <div
+            class="d-flex w-100 justify-content-center align-items-center"
+            style="height: 150px; background-color: #ffffff"
+          >
+            <!-- {{ "noRecommendedBorrowings" | translate }} -->
+            <app-not-found></app-not-found>
+          </div>
+        </div>
+        <div
+          *ngIf="showRecommend"
+          class="horizontal-scroll-container py-3 d-flex justify-content-start justify-content-xl-center"
+        >
+          <div class="card-container d-flex">
+            <div
+              *ngFor="let book of bookRecommend"
+              class="card book-image border-box-rgb opacity-100"
+              style="width: 185px; flex-shrink: 0"
+            >
+              <div class="rounded bg-white">
+                <a (click)="editPathUrl(book.id)" style="text-decoration: none">
+                  <!-- <img
+                    [src]="book.bookImage"
+                    class="card-img-top"
+                    alt="Card Image"
+                    style="height: 265px; width: 100%; object-fit: cover"
+                  /> -->
+                  <app-book-image-spinner
+                    class="cpnen-book-spinner2"
+                    sendClass="card-img-top"
+                    [srcUrl]="book.bookImage"
+                    altFrom="recommed"
+                  />
+                  <div class="card-body">
+                    <h5
+                      class="card-title text-dark text-truncate f13"
+                      style="
+                        width: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                      "
+                    >
+                      {{ getLanguages === "en" ? book.bookNameEn : book.bookNameTh }}
+                    </h5>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- end card -->
+      </div>
+    </div>
+    <!-- end recommed -->
+    <hr class="hr my-4" />
+
+    <!-- start comments here -->
+    <div class="row p-0 m-0">
+      <div class="col-12 p-0 m-0">
+        <div class="px-3">
+          <div
+            class="d-flex justify-content-end px-4 mb-2 f16 fw-bold showTable"
+            (click)="showComments = !showComments"
+          >
+            {{ "comments" | translate }}
+            <span class="ms-2">
+              <i
+                class="fa-solid"
+                [ngClass]="showComments ? 'fa-caret-down' : 'fa-caret-up'"
+              ></i>
+            </span>
+          </div>
+          <div *ngIf="showComments">
+            <div class="row d-flex justify-content-center">
+              <div *ngIf="commentLoading" class="d-flex justify-content-center my-3">
+                <div
+                  class="spinner-border text-light"
+                  style="width: 80px; height: 80px"
+                  role="status"
+                >
+                  <span class="sr-only">Loading...</span>
+                </div>
+              </div>
+              <div *ngIf="!commentLoading" class="col-12 p-0 m-0">
+                <!--  -->
+                <div class="row d-flex justify-content-center p-0 m-0">
+                  <div class="row col-10 offset-2 p-0 m-0 d-flex">
+                    <div class="comment-row">
+                      <div
+                        class="comment-item"
+                        *ngFor="let comment of bookComments?.content"
+                      >
+                        <div class="box-comments">
+                          <div class="d-flex align-items-center mb-3">
+                            <img
+                              [src]="comment.image || './takeLibro/icon_user.png'"
+                              width="50"
+                              height="50"
+                              class="rounded-circle me-2"
+                              alt="{{ comment.profileCode }}"
+                            />
+                            <span style="display: flex; flex-direction: column">
+                              <span class="f16">
+                                {{ comment.firstName }} {{ comment.lastName }}
+                              </span>
+                              <small style="color: #343434">
+                                {{
+                                  formatDateService.lastStatus(
+                                    comment.createAt,
+                                    getLanguages
+                                  )
+                                }}
+                              </small>
+                            </span>
+                          </div>
+                          <p class="m-0">{{ comment.commentText }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="d-flex justify-content-end col-10 mb-2 mt-4"
+                    *ngIf="
+                      (bookComments?.totalElements ?? 0) >
+                      (bookComments?.content?.length ?? 0)
+                    "
+                  >
+                    <span class="ptr" (click)="moreComment()">
+                      {{ "viewMore" | translate }}
+                      {{
+                        (bookComments?.totalElements ?? 0) -
+                          (bookComments?.content?.length ?? 0) <=
+                        5
+                          ? (bookComments?.totalElements ?? 0) -
+                            (bookComments?.content?.length ?? 0)
+                          : 5
+                      }}/{{
+                        (bookComments?.totalElements ?? 0) -
+                          (bookComments?.content?.length ?? 0)
+                      }}
+                    </span>
+                  </div>
+                </div>
+
+                <div class="row my-2 d-flex justify-content-center">
+                  <div class="row col-8 offset-4 p-0 m-0 d-flex">
+                    <div class="col-1 d-flex justify-content-center align-items-center">
+                      <img
+                        [src]="profileData?.image || './takeLibro/icon_user.png'"
+                        width="60px"
+                        height="60px"
+                        class="rounded-circle"
+                        alt="user: {{ profileData?.profileCode }}"
+                      />
+                    </div>
+                    <div class="col-11 d-flex justify-content-center align-items-center">
+                      <form class="d-flex w-100">
+                        <div class="input-group w-100">
+                          <input
+                            class="form-control rounded w-100"
+                            type="search"
+                            style="border-radius: 15px; height: 40px"
+                            [placeholder]="'writeComment' | translate"
+                            [(ngModel)]="inputComments"
+                            (keyup.enter)="postComments()"
+                            name="search"
+                          />
+                          <span class="icon-search">
+                            <i class="fa-solid fa-comment fcolor"></i>
+                          </span>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!--  -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end comments -->
+    <hr class="hr my-4" />
+  </div>
+</main>
+
+<!-- Modal -->
+<div class="modal fade" id="modalStart">
+  <div class="modal-dialog modal-dialog-centered d-flex justify-content-center">
+    <div class="d-flex justify-content-center p-3">
+      <img
+        [src]="selectedImage"
+        alt="Book Image"
+        style="max-width: 100%; min-width: 380px; height: auto"
+      />
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalBorrowBook">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="d-flex justify-content-end pt-4 pe-4">
+        <button
+          type="button"
+          class="btn-close"
+          id="closeModalButton"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="newBorrowForm" (ngSubmit)="onSubmit()">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              [src]="
+                bookDetail?.bookImage
+                  ? bookDetail?.bookImage
+                  : 'https://www.islamspk.com/committee/no-pict.png'
+              "
+              class="modal-book-image card-img-top"
+            />
+            <div class="ms-3">
+              <div class="mb-2">
+                <label class="form-label fw-bold">{{ "nameBook" | translate }}:</label>
+                <p>
+                  {{
+                    getLanguages === "en"
+                      ? bookDetail?.bookNameEn
+                      : bookDetail?.bookNameTh
+                  }}
+                </p>
+              </div>
+              <div class="mb-2">
+                <label class="form-label fw-bold">{{ "bookCode" | translate }}:</label>
+                <p>{{ bookDetail?.bookCode }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ "borrowerName" | translate }}</label>
+            <input [value]="nameUser" type="text" class="form-control" readonly />
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <label class="form-label fw-bold">{{ "borrowingDate" | translate }}</label>
+              <app-datepicker-th
+                [minDate]="minStartFunc()"
+                [maxDate]="MaxStartFunc()"
+                dateType="TH"
+                [language]="getLanguages"
+                [bsValue]="borrowStartSet"
+                (value)="setDate($event, 'START')"
+                [placeholder]="'dateFormat' | translate"
+              />
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-bold">{{ "returnDate" | translate }}</label>
+              <app-datepicker-th
+                [minDate]="minEndFunc()"
+                dateType="TH"
+                [bsValue]="borrowEndSet"
+                [language]="getLanguages"
+                (value)="setDate($event, 'END')"
+                [placeholder]="'dateFormat' | translate"
+              />
+            </div>
+          </div>
+          <div class="modal-footer border-0 justify-content-center">
+            <app-button
+              [text]="'cancel' | translate"
+              color="cancel"
+              id="closeModalButton"
+              data-bs-dismiss="modal"
+            ></app-button>
+            <app-button
+              type="submit"
+              [text]="'ok' | translate"
+              color="borrow0"
+            ></app-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-spinner *ngIf="loadingTable"></app-spinner>

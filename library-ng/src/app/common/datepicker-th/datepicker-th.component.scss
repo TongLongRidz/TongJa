@@ -1,0 +1,85 @@
+.input-group.rounded {
+  margin: 0 auto;
+  /* จัดกึ่งกลาง */
+  border: 1px solid #dadada;
+  /* กรอบสีเทา */
+  border-radius: 20%;
+  /* มุมโค้งมน */
+  background-color: #f9f9f9;
+  /* พื้นหลังสีเทาอ่อน */
+}
+
+.input-group .form-control {
+  border: none;
+  /* ลบกรอบของ input */
+  // border-radius: 0; /* ลบมุมโค้งมน */
+}
+
+.input-group .form-control:focus {
+  outline: none;
+  /* ลบเส้นกรอบเมื่อ focus */
+  box-shadow: none;
+  /* ลบเงาเมื่อ focus */
+}
+
+.input-group .btn {
+  border: none;
+  /* ลบกรอบของปุ่ม */
+}
+
+.input-group .btn:focus {
+  outline: none;
+  /* ลบเส้นกรอบเมื่อ focus */
+  box-shadow: none;
+  /* ลบเงาเมื่อ focus */
+}
+
+.input-group .btn .fa-calendar-days {
+  font-size: 16px;
+}
+
+.icon {
+  color: #0c7af0;
+  transition: color 0.3s;
+}
+
+.icon:hover {
+  color: #a5ccf6;
+}
+
+::ng-deep .bs-datepicker .bs-datepicker-body tbody .selected {
+  background-color: #5cb85c !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 220px;
+  height: 40px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.form-first {
+  width: 1px;
+  visibility: hidden !important;
+}
+
+::ng-deep .bs-datepicker-container {
+  animation: slideInUp 250ms cubic-bezier(0.4, 0, 1, 1); /* ease-in */
+  transform-origin: bottom center;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* เริ่มจากต่ำกว่าเล็กน้อย */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

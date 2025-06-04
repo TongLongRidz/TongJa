@@ -1,0 +1,61 @@
+<main class="container mb-5">
+  <!-- header content -->
+  <div class="row px-3 px-lg-0">
+    <div class="card-body">
+      <div>
+        <span class="mt-2 f16">{{ "bookBorrowList" | translate }}</span>
+      </div>
+      <div class="d-flex justify-content-start">
+        <form class="d-flex">
+          <div class="input-group">
+            <input
+              class="form-control rounded responsive-input"
+              style="width: 250px"
+              type="search"
+              [attr.placeholder]="'search' | translate"
+              [(ngModel)]="searching"
+              (input)="onSearching()"
+              name="search"
+            />
+            <span class="icon-search">
+              <i class="fa-solid fa-magnifying-glass fcolor"></i>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- content -->
+  <div class="row px-3 px-lg-0">
+    <div
+      class="card mt-3 bg-container p-0 m-0"
+      style="box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2)"
+    >
+      <div class="card-body p-4">
+        <!-- Table List Here -->
+        <div class="pb-4">
+          <app-borrow-table
+            [borrowBookTable]="borrowBookTable"
+            [statusSort]="statusSort"
+            [pageCurrent]="pageCurrent"
+            [pageSize]="pageSize"
+            [totalElementsPage]="totalElementsPage"
+            [loadingTable]="loadingTable"
+            [searching]="searching"
+            [nameSort]="nameSort"
+            [Language]="getLanguages"
+          />
+        </div>
+        <!-- Pagination Here -->
+        <app-pagination
+          [totalPages]="totalPages"
+          [pageCurrent]="pageCurrent"
+          (pageChange)="changePage($event)"
+        />
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal Here -->
+<app-borrow-modal [userBorrowID]="userBorrowID" [Language]="getLanguages" />

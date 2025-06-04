@@ -1,0 +1,94 @@
+<div class="table-responsive rounded">
+  <table class="table table-striped p-0 m-0">
+    <thead>
+      <!-- prettier-ignore -->
+      <tr style="height: 55px">
+        <th scope="col" style="width: 5%" class="text-center align-middle tbc">
+          <i
+            [ngClass]="{ 'fa-arrow-up-wide-short': !statusSort, 'fa-arrow-down-short-wide': statusSort }"
+            class="fa-solid"
+            (click)="borrowCom.sortTable()"
+            style="cursor: pointer"
+          ></i>
+        </th>
+        <th scope="col" class="text-truncate align-middle tbc" style="width: 20%">{{ "borrowerName" | translate }}</th>
+        <th scope="col" class="text-truncate ptr align-middle tbc" style="width: 40%" (click)="borrowCom.sortNameFunc()">{{ "nameBook" | translate }} 
+          <i *ngIf="nameSort === 'max'" class="fa-solid fa-arrow-down-a-z"></i>
+          <i *ngIf="nameSort === 'min'" class="fa-solid fa-arrow-up-z-a"></i>
+        </th>
+        <th scope="col" class="text-truncate align-middle tbc" style="width: 10%">{{ "borrowingDate" | translate }}</th>
+        <th scope="col" class="text-truncate align-middle tbc" style="width: 10%">{{ "returnDate" | translate }}</th>
+        <th scope="col" class="text-truncate align-middle tbc text-center" style="width: 2%">{{ "statusName" | translate }}</th>
+        <th scope="col" class="text-truncate align-middle tbc text-center" style="width: 13%">{{ "manage" | translate }}</th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!loadingTable" class="text-center">
+      <tr *ngIf="borrowBookTable.length === 0">
+        <td
+          colspan="7"
+          style="text-align: center; font-size: 16px; color: #808080"
+        >
+          <p style="padding-top: 20px">
+            <app-not-found></app-not-found>
+          </p>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody>
+      <!-- prettier-ignore -->
+      <tr *ngFor="let borrow of borrowBookTable; let i = index">
+        <td class="align-middle text-center">
+          {{ i + 1 + (pageCurrent - 1) * pageSize }}
+        </td>
+        <td class="align-middle text-truncate"> {{borrow.firstName}} {{borrow.lastName}} </td>
+        <td class="align-middle text-truncate">{{ Language === "th" ? borrow.bookNameTh : borrow.bookNameEn }}</td>
+        <td class="align-middle text-truncate">{{ formatDateService.forDate(borrow.borrowStart, 'MIN', 'NO-TIME', Language) }}</td>
+        <td class="align-middle text-truncate">{{ formatDateService.forDate(borrow.borrowEnd, 'MIN', 'NO-TIME', Language) }}</td>
+        <td class="align-middle text-center">
+          <div class="d-flex justify-content-center">
+            <div class="status-icon-center" [style.background-color]="borrow.borrowStatus === 0 ? '#5ddd1d' : '#FF3333'">
+              <span class="status-icon-border" [style.background-color]="borrow.borrowStatus === 0 ? '#5ddd1d' : '#FF3333'"></span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex justify-content-center">
+            <div
+              class="d-flex justify-content-around"
+              style="min-width: 150px; max-width: 170px"
+            >
+              <app-button
+                (click)="editBorrowBook(borrow.id)"
+                icon="fa-solid fa-eye"
+                color="details"
+                ruleStyle="TABLE"
+                class="mx-1 mx-lg-0"
+              />
+              <app-button
+                (click)="isChangeStatusBook(borrow.borrowStatus === 0 ? borrow.id : null)"
+                icon="fa-solid fa-trash"
+                color="delete"
+                class="mx-1 mx-lg-0"
+                ruleStyle="TABLE"
+                [disabled]="borrow.borrowStatus != 0 ? true : false"
+                [color]="borrow.borrowStatus === 0 ? 'delete' : 'disabled'"
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<table class="table m-0">
+  <tr
+    *ngFor="let _ of [].constructor(pageSize - borrowBookTable.length)"
+    style="height: 53px"
+  >
+    <td></td>
+  </tr>
+</table>
+
+<app-spinner *ngIf="loadingTable"></app-spinner>

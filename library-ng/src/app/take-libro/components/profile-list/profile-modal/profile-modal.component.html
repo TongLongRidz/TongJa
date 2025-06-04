@@ -1,0 +1,515 @@
+<!-- Modal -->
+<div class="modal fade" id="modalProfileManage">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 650px">
+    <div class="modal-content">
+      <div class="modal-body p-0 m-0">
+        <!-- header -->
+        <div class="rounded-top p-2" style="height: 120px; background-color: #32373e">
+          <!-- prettier-ignore -->
+          <div class="d-flex justify-content-between">
+              <button type="button" id="closeModalButtonProfile" class="btn-close invisible" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="mt-3 h5 text-white">{{ !userProfileManage ? ('editProfileDetails' | translate) : ('addUsers' | translate)}}</div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="filter: invert(1);"></button>
+            </div>
+          <div class="d-flex justify-content-center mt-3">
+            <!-- prettier-ignore -->
+            <img
+                [class]="userProfileManage || !userProfileManage && !userProfileEditPassword ? 'object-fit-cover rounded-circle shadows-box user-image' : 'object-fit-cover rounded-circle shadows-box'"
+                [src]="getImageIcon" width="90px" height="90px" 
+                alt="icon user" (click)="statusImagePick && fileInput.click()" />
+
+            <div
+              *ngIf="
+                userProfileManage || (!userProfileManage && !userProfileEditPassword)
+              "
+              [ngClass]="userProfileManage ? 'icon-font-imageAdd' : 'icon-font-image'"
+              (click)="fileInput.click()"
+            >
+              <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+            <input
+              type="file"
+              #fileInput
+              (change)="onImageSelect($event)"
+              style="display: none"
+            />
+          </div>
+        </div>
+
+        <!-- content -->
+        <div class="p-4">
+          <div class="mt-1">
+            <div class="d-flex justify-content-end align-items-center">
+              <div>
+                <span
+                  *ngIf="userProfileManage"
+                  class="editUserName"
+                  (click)="formAddisReset()"
+                >
+                  <!-- {{ "clear" | translate }} -->
+                </span>
+                <span
+                  *ngIf="!userProfileManage && !userProfileEditPassword"
+                  class="editUserName"
+                  (click)="userProfileEditPassword = !userProfileEditPassword"
+                >
+                  <!-- {{ "changePassword" | translate }} -->
+                  <i class="ms-1 fa-solid fa-key"></i
+                ></span>
+                <span
+                  *ngIf="!userProfileManage && userProfileEditPassword"
+                  class="editUserName"
+                  (click)="userProfileEditPassword = !userProfileEditPassword"
+                >
+                  <!-- {{ "back" | translate }} -->
+                  <i class="ms-1 fa-solid fa-arrow-right"></i
+                ></span>
+              </div>
+            </div>
+            <hr class="mt-3" />
+          </div>
+
+          <form
+            *ngIf="userProfileManage"
+            [formGroup]="registerForm"
+            (ngSubmit)="onFormSubmit('ADD')"
+          >
+            <div class="row">
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="firstName"
+                    [ngClass]="{ 'text-danger': validForm1('firstName') }"
+                  >
+                    {{ "firstName" | translate }}
+                    {{ validForm1("firstName") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    formControlName="firstName"
+                    class="form-control login-input px-3"
+                    [placeholder]="'requiredFirstName' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="lastName"
+                    [ngClass]="{ 'text-danger': validForm1('lastName') }"
+                    >{{ "lastName" | translate }}
+                    {{ validForm1("lastName") ? "*" : "" }}</label
+                  >
+                  <input
+                    id="lastName"
+                    type="text"
+                    formControlName="lastName"
+                    class="form-control login-input px-3"
+                    [placeholder]="'requiredLastName' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="email" [ngClass]="{ 'text-danger': validForm1('email') }"
+                    >{{ "email" | translate }}
+                    {{ editForm.get('email')?.errors?.['email'] ? '- ที่อยู่อีเมลไม่ถูกต้อง' : '' }}
+                    {{ validForm1("email") ? "*" : "" }}</label
+                  >
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    class="form-control login-input px-3"
+                    [placeholder]="'requiredEmail' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-envelope text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="telephone"
+                    class="text-nowrap"
+                    [ngClass]="{ 'text-danger': validForm1('telephone') }"
+                  >
+                    {{ "phoneNumber" | translate }}
+                    {{ editForm.get('telephone')?.errors?.['pattern'] ? '- หมายเลขไม่ถูกต้อง' : '' }}
+                    {{ validForm1("telephone") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="telephone"
+                    type="text"
+                    formControlName="telephone"
+                    class="form-control login-input px-3"
+                    [placeholder]="'requiredPhone' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-phone text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <!--  -->
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    class="text-nowrap"
+                    [ngClass]="{ 'text-danger': validForm1('password') }"
+                  >
+                    {{ "password" | translate }}
+                    {{ registerForm.get('password')?.errors?.['minlength'] ? '(อย่างน้อย 6 ตัว)' : '' }}
+                    {{ validForm1("password") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="password"
+                    type="{{ vPWD1 ? 'text' : 'password' }}"
+                    formControlName="password"
+                    class="form-control login-input px-4"
+                    [placeholder]="'requiredPassword' | translate"
+                  />
+                  <span class="register-icon2" (click)="statusPWD1()">
+                    <i
+                      class="fa-solid"
+                      [ngClass]="{
+                        'fa-eye': vPWD1,
+                        'fa-eye-slash': !vPWD1,
+                        'text-secondary': true
+                      }"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <!-- prettier-ignore -->
+                  <label class="text-nowrap"
+                      [ngClass]="{ 'text-danger': validForm1('confirmPwd') || isPasswordMismatch() }">
+                      {{ "confirmPassword" | translate }}
+                      {{ registerForm.get('confirmPwd')?.errors?.['minlength'] ? '(อย่างน้อย 6 ตัว)' :
+                      isPasswordMismatch() ? "รหัสไม่ตรงกัน" : "" }}
+                      {{ validForm1("confirmPwd") || isPasswordMismatch() ? "*" : "" }}
+                    </label>
+                  <input
+                    id="confirmPwd"
+                    type="{{ vPWD2 ? 'text' : 'password' }}"
+                    formControlName="confirmPwd"
+                    class="form-control login-input px-4"
+                    [placeholder]="'requiredPassword' | translate"
+                  />
+                  <span class="register-icon2">
+                    <i
+                      class="{{
+                        vPWD2
+                          ? 'fa-solid fa-eye text-secondary'
+                          : 'fa-solid fa-eye-slash text-secondary'
+                      }}"
+                      (click)="statusPWD2()"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+              <!--  -->
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label class="text-nowrap">{{ "position" | translate }}</label>
+                  <div class="input-group">
+                    <select formControlName="role" class="form-select px-3">
+                      <option value="R001">{{ "R001" | translate }}</option>
+                      <option value="R002">{{ "R002" | translate }}</option>
+                      <option *ngIf="auth.hasRole(['R003'])" value="R003">
+                        {{ "R003" | translate }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label class="text-nowrap"></label>
+                  <div>
+                    <button
+                      style="background-color: #58d68d"
+                      type="submit"
+                      class="btn w-100 h-100 text-white"
+                    >
+                      <span>
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+                        {{ "save" | translate }}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <form
+            *ngIf="!userProfileManage && !userProfileEditPassword"
+            [formGroup]="editForm"
+            (ngSubmit)="onFormSubmit('EDIT')"
+          >
+            <div class="row">
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="firstName"
+                    [ngClass]="{ 'text-danger': validForm2('firstName') }"
+                  >
+                    {{ "firstName" | translate }}
+                    {{ validForm2("firstName") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    formControlName="firstName"
+                    class="form-control login-input px-3"
+                    [attr.placeholder]="'requiredFirstName' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="lastName"
+                    [ngClass]="{ 'text-danger': validForm2('lastName') }"
+                    >{{ "lastName" | translate }}
+                    {{ validForm2("lastName") ? "*" : "" }}</label
+                  >
+                  <input
+                    id="lastName"
+                    type="text"
+                    formControlName="lastName"
+                    class="form-control login-input px-3"
+                    [attr.placeholder]="'requiredLastName' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    [ngClass]="{
+                      'text-danger': validForm2('email') || !adminCheckEmail
+                    }"
+                    >{{ "email" | translate }}
+                    {{ !adminCheckEmail ? "* " + ("emailExists" | translate) : "" }}
+                    {{ editForm.get('email')?.errors?.['email'] ? '- ' + ("invalidEmail" | translate) : '' }}
+                    {{ validForm2("email") ? "*" : "" }}</label
+                  >
+                  <input
+                    type="email"
+                    formControlName="email"
+                    class="form-control login-input px-3"
+                    [attr.placeholder]="'requiredEmail' | translate"
+                    [(ngModel)]="adminInputEmail"
+                    (input)="onInputCheckEmail()"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-envelope text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="telephone"
+                    class="text-nowrap"
+                    [ngClass]="{ 'text-danger': validForm2('telephone') }"
+                  >
+                    {{ "phoneNumber" | translate }}
+                    {{ editForm.get('telephone')?.errors?.['pattern'] ? '- ' + ("invalidPhone" | translate) : '' }}
+                    {{ validForm2("telephone") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="telephone"
+                    type="text"
+                    formControlName="telephone"
+                    class="form-control login-input px-3"
+                    [attr.placeholder]="'requiredPhone' | translate"
+                  />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-phone text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label class="text-nowrap">{{ "position" | translate }}</label>
+                  <div class="input-group">
+                    <select formControlName="role" class="form-select px-3">
+                      <option value="R001">{{ "R001" | translate }}</option>
+                      <option value="R002">{{ "R002" | translate }}</option>
+                      <option *ngIf="auth.hasRole(['R003'])" value="R003">
+                        {{ "R003" | translate }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label class="text-nowrap"></label>
+                  <div>
+                    <button
+                      style="background-color: #58d68d"
+                      type="submit"
+                      class="btn w-100 h-100 text-white"
+                    >
+                      <span>
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+                        {{ "save" | translate }}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+          <form
+            *ngIf="!userProfileManage && userProfileEditPassword"
+            [formGroup]="passwordForm"
+            (ngSubmit)="onFormSubmit('PWD')"
+          >
+            <div class="row">
+              <div class="col-12 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    class="text-nowrap"
+                    [ngClass]="{ 'text-danger': validForm3('password') }"
+                  >
+                    {{ "password" | translate }}
+                    {{ registerForm.get('password')?.errors?.['minlength'] ? ('passwordMinLength' | translate) : '' }}
+                    {{ validForm3("password") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="password"
+                    type="{{ vPWD3 ? 'text' : 'password' }}"
+                    formControlName="password"
+                    class="form-control login-input px-3"
+                    [attr.placeholder]="'requiredPassword' | translate"
+                  />
+                  <span class="register-icon2" (click)="statusPWD3()">
+                    <i
+                      class="fa-solid"
+                      [ngClass]="{
+                        'fa-eye': vPWD3,
+                        'fa-eye-slash': !vPWD3,
+                        'text-secondary': true
+                      }"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-12 mb-2 position-relative">
+                <div class="form-group">
+                  <!-- prettier-ignore -->
+                  <label class="text-nowrap"
+                      [ngClass]="{ 'text-danger': validForm3('confirmPwd') || isPasswordMismatchOnReset() }">
+                      {{ "confirmPassword" | translate }}
+                      {{ registerForm.get('confirmPwd')?.errors?.['minlength'] ? ('passwordMinLength' | translate) :
+                      isPasswordMismatchOnReset() ? ('passwordMismatch' | translate) : "" }}
+                      {{ validForm3("confirmPwd") || isPasswordMismatchOnReset() ? "*" : "" }}
+                    </label>
+                  <input
+                    type="{{ vPWD4 ? 'text' : 'password' }}"
+                    formControlName="confirmPwd"
+                    class="form-control login-input px-3"
+                    [attr.placeholder]="'requiredPassword' | translate"
+                  />
+                  <span class="register-icon2">
+                    <i
+                      class="{{
+                        vPWD4
+                          ? 'fa-solid fa-eye text-secondary'
+                          : 'fa-solid fa-eye-slash text-secondary'
+                      }}"
+                      (click)="statusPWD4()"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-12 mb-2 position-relative">
+                <button
+                  style="background-color: #58d68d"
+                  type="submit"
+                  class="btn w-100 h-100 text-white"
+                >
+                  <span>
+                    <i class="fa-solid fa-floppy-disk me-1"></i>
+                    {{ "save" | translate }}
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crop -->
+<div class="modal fade" id="cropModalProfile">
+  <div
+    class="modal-dialog modal-dialog-centered"
+    style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5)"
+  >
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">แก้ไขขนาดรูปภาพ</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="closeModalCropProfile"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <image-cropper
+            style="max-height: 500px"
+            *ngIf="imageChangedEvent"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1 / 1"
+            (imageCropped)="onCropProfile($event)"
+          ></image-cropper>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <app-button
+          type="button"
+          color="add"
+          [text]="'save' | translate"
+          icon=""
+          (click)="onSetCropProfile()"
+        ></app-button>
+
+        <app-button data-bs-dismiss="modal" color="cancel" text="ยกเลิก"></app-button>
+      </div>
+    </div>
+  </div>
+</div>

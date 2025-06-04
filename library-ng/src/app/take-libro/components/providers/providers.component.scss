@@ -1,0 +1,51 @@
+.card.blue {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .progress-info {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  
+  .progress {
+    margin-top: 1rem;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    height: 8px;
+    overflow: hidden;
+  
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, #ffffff, #d2e3fc);
+      transition: width 0.3s ease;
+      border-radius: 999px;
+    }
+  }
+  
+  
+  .buttons {
+    margin-top: 1rem;
+  
+    a {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.5rem 1.25rem;
+      border-radius: 0.5rem;
+      color: white;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: background 0.2s ease;
+  
+      &:hover {
+        background: white;
+        color: black;
+      }
+    }
+  }
+  

@@ -1,0 +1,442 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 p-0">
+      <span class="mt-2 f16">{{ "myBorrowHistory" | translate }}</span>
+      <div class="d-flex justify-content-between">
+        <form class="d-flex form-search" [formGroup]="searchHistory">
+          <div class="input-group me-5">
+            <input
+              (input)="searchGet($event)"
+              type="text"
+              class="form-control width-input rounded"
+              id="search"
+              type="search"
+              [attr.placeholder]="'search' | translate"
+              aria-label="Search"
+              formControlName="search"
+            />
+            <div class="input-group-append me-4">
+              <span class="input-group-text"
+                ><i class="fa-solid fa-magnifying-glass fcolor"></i
+              ></span>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card m-0 p-0 mt-3 bg-container">
+      <div class="card-body p-4">
+        <table class="table table-striped overflow-hidden rounded p-0 m-0">
+          <thead>
+            <tr style="height: 55px">
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 5%"
+              >
+                <i
+                  [ngClass]="{
+                    'fa-arrow-up-wide-short': !Sort,
+                    'fa-arrow-down-short-wide': Sort
+                  }"
+                  class="fa-solid"
+                  (click)="toggleSort()"
+                  style="cursor: pointer"
+                ></i>
+              </th>
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 10%"
+              >
+                {{ "borrowCode" | translate }}
+              </th>
+              <th scope="col" class="align-middle tbc" style="width: 12%">
+                {{ "borrowerName" | translate }}
+              </th>
+              <th scope="col" class="align-middle tbc" style="width: 20%">
+                {{ "nameBook" | translate }}
+              </th>
+              <th scope="col" class="align-middle tbc" style="width: 9%">
+                {{ "borrowingDate" | translate }}
+              </th>
+              <th scope="col" class="align-middle tbc" style="width: 9%">
+                {{ "returnDate" | translate }}
+              </th>
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 6%"
+              >
+                {{ "totalBorrowedDays" | translate }}
+              </th>
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 14%"
+              >
+                {{ "borrowEndDate" | translate }}
+              </th>
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 2%"
+              >
+                {{ "statusName" | translate }}
+              </th>
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 13%"
+              >
+                {{ "manage" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="loadingTable" class="text-center">
+            <tr>
+              <td colspan="12" class="position-relative">
+                <app-spinner></app-spinner>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!loadingTable">
+            <tr
+              *ngFor="
+                let History of dataHistory
+                  | paginate
+                    : {
+                        id: 'user-data',
+                        currentPage: page,
+                        itemsPerPage: size,
+                        totalItems: totalElements
+                      };
+                let i = index
+              "
+            >
+              <td id="id" scope="row" class="fw-bold text-center align-middle">
+                {{ (page - 1) * size + i + 1 }}
+              </td>
+              <td class="align-middle text-center">
+                {{ History.borrowCode }}
+              </td>
+              <td class="align-middle">
+                {{ History.firstName }} {{ History.lastName }}
+              </td>
+              <td class="align-middle">
+                {{
+                  getLanguages === "en"
+                    ? History.bookNameEn
+                    : History.bookNameTh
+                }}
+              </td>
+              <td class="align-middle">
+                {{
+                  formatDateService.forDate(
+                    History.borrowStart,
+                    "MIN",
+                    "NO-TIME",
+                    this.getLanguages
+                  )
+                }}
+              </td>
+              <td class="align-middle">
+                {{
+                  formatDateService.forDate(
+                    History.borrowEnd,
+                    "MIN",
+                    "NO-TIME",
+                    this.getLanguages
+                  )
+                }}
+              </td>
+              <td class="align-middle text-center">
+                {{ History.borrowDays }}
+              </td>
+              <td class="align-middle text-center">
+                {{
+                  History.returnDate
+                    ? formatDateService.forDate(
+                        History.returnDate,
+                        "MIN",
+                        "TIME",
+                        this.getLanguages
+                      )
+                    : "-"
+                }}
+              </td>
+
+              <td class="align-middle text-center">
+                <div class="d-flex justify-content-center">
+                  <div
+                    class="status-icon-center"
+                    [style.background-color]="
+                      isReturnToday(History.borrowEnd)
+                        ? '#FFD700'
+                        : !isOverdue(History.borrowEnd)
+                        ? '#5ddd1d'
+                        : '#FF3333'
+                    "
+                  >
+                    <span
+                      class="status-icon-border"
+                      [style.background-color]="
+                        isReturnToday(History.borrowEnd)
+                          ? '#FFD700'
+                          : isOverdue(History.borrowEnd)
+                          ? '#FF3333'
+                          : '#5ddd1d'
+                      "
+                    ></span>
+                  </div>
+                </div>
+              </td>
+
+              <td
+                *ngIf="History.borrowStatus == 1"
+                class="align-middle text-center"
+              >
+                <app-button
+                  (click)="openModalHis(History.id)"
+                  data-bs-toggle="modal"
+                  [color]="'styb2'"
+                  data-bs-target="#modalManagementBorrow"
+                  [text]="'manageBorrowing' | translate"
+                  width="200"
+                ></app-button>
+              </td>
+
+              <td
+                *ngIf="History.borrowStatus == 0"
+                class="align-middle text-center"
+              >
+                <app-button
+                  [color]="'styb2'"
+                  [text]="'manageBorrowing' | translate"
+                  width="200"
+                  color="disabled"
+                ></app-button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr *ngIf="!loadingTable && dataHistory.length === 0">
+              <td
+                colspan="12"
+                style="text-align: center; font-size: 16px; color: #808080"
+              >
+                <p style="padding-top: 20px">
+                  <app-not-found></app-not-found>
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table m-0">
+          <tr
+            *ngFor="let _ of [].constructor(10 - dataHistory.length)"
+            style="height: 53px"
+          >
+            <td></td>
+          </tr>
+        </table>
+        <div class="d-flex justify-content-center pt-4">
+          <app-pagination
+            [totalPages]="totalPages"
+            [pageCurrent]="page"
+            (pageChange)="onPageChange($event)"
+          ></app-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalManagementBorrow">
+  <div class="modal-dialog modal-dialog-centered">
+    <form [formGroup]="newBorrowForm" (ngSubmit)="SubmitBorrow()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">{{ "editBookInfo" | translate }}</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            id="closeModalButtonBorrow"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mx-4 mt-2">
+            <div class="row p-2 mt-4 align-items-center">
+              <div class="col-md-4">
+                <label for="borrowerName">
+                  {{ "borrowerName" | translate }}
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  [attr.placeholder]="('nameBook' | translate) + ' (TH)'"
+                  formControlName="borrowerName"
+                  class="form-control disble-form"
+                  readonly
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-4">
+                <label for="bookNameTh">
+                  {{ "nameBook" | translate }} (TH)
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  [attr.placeholder]="('nameBook' | translate) + ' (TH)'"
+                  formControlName="bookNameTh"
+                  class="form-control disble-form"
+                  readonly
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-4">
+                <label for="bookNameEn">
+                  {{ "nameBook" | translate }} (EN)
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  [attr.placeholder]="('nameBook' | translate) + ' (EN)'"
+                  formControlName="bookNameEn"
+                  class="form-control disble-form"
+                  readonly
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-4">
+                <label for="borrowStart">{{
+                  "borrowingDate" | translate
+                }}</label>
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  placeholder="-"
+                  formControlName="borrowStart"
+                  class="form-control disble-form"
+                  readonly
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-4">
+                <label for="borrowEnd">{{ "returnDate" | translate }}</label>
+              </div>
+              <div class="col-md-8">
+                <app-datepicker-th
+                  [minDate]="minDate"
+                  [language]="getLanguages"
+                  [maxDate]="undefined"
+                  dateType="TH"
+                  [placeholder]="'dateFormat' | translate"
+                  [bsValue]="this.borrowEnd?.value"
+                  (value)="onDateSelected($event)"
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-5 col-md-4 text-truncate">
+                <label for="borrowStatus">{{ "statusName" | translate }}</label>
+              </div>
+              <div class="col-7 col-md-8">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input large-checkbox"
+                    formControlName="borrowStatus"
+                    name="borrowStatus"
+                    type="checkbox"
+                    (change)="onBorrowStatusChange($event)"
+                    id="borrowStatusToggle"
+                    [checked]="newBorrowForm.get('borrowStatus')?.value"
+                  />
+                  <label
+                    class="form-check-label check-box-label"
+                    for="borrowStatusToggle"
+                  >
+                    {{
+                      newBorrowForm.get("borrowStatus")?.value
+                        ? ("yum" | translate)
+                        : ("notUse" | translate)
+                    }}
+                  </label>
+                </div>
+              </div>
+
+              <div
+                class="col-12 mt-3 file-upload-container"
+                *ngIf="newBorrowForm.get('borrowStatus')?.value === 0"
+              >
+                <label
+                  for="upload"
+                  class="form-control imageborrow text-center"
+                >
+                  <i class="fa-solid fa-camera-retro me-1"></i>
+                  <span>{{ "picture" | translate }}</span>
+                </label>
+                <input
+                  #fileInput
+                  class="form-control btn animate-input"
+                  hidden
+                  id="upload"
+                  type="file"
+                  (change)="onFileSelected($event)"
+                />
+              </div>
+              <div class="col-12 position-relative mt-3">
+                <div class="image-container" *ngIf="selectedImage">
+                  <img
+                    [src]="selectedImage"
+                    alt="รูปภาพที่เลือก"
+                    class="img-preview"
+                    style="
+                      max-width: 100%;
+                      height: auto;
+                      max-height: 300px;
+                      border-radius: 7px;
+                    "
+                  />
+                  <div class="menu-overlay">
+                    <div class="mb-2">
+                      <app-button
+                        (click)="changeImage()"
+                        color="edit"
+                        [text]="'edit' | translate"
+                      ></app-button>
+                    </div>
+                    <div>
+                      <app-button
+                        (click)="clearImage()"
+                        color="delete"
+                        [text]="'remove' | translate"
+                      ></app-button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="modal-footer d-flex justify-content-center">
+          <app-button [text]="('save' | translate)" color="add" type="submit"></app-button>
+          <app-button data-bs-dismiss="modal" [text]="('cancel' | translate)" color="cancel"></app-button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

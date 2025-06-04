@@ -1,0 +1,74 @@
+<div class="modal fade" id="modalManagementBorrow">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 600px">
+    <div class="modal-content">
+      <form [formGroup]="newBorrowForm" (ngSubmit)="onFormSubmit()">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 f16">{{ "bookInfo" | translate }}</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            id="closeModalButtonBorrow"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mx-4">
+            <div class="row p-2 align-items-center">
+              <div class="col-5 col-md-4 offset-1 offset-md-2 p-md-0">
+                <label for="borrowerName">
+                  {{ "borrowerName" | translate }}
+                </label>
+              </div>
+              <div class="col-6">
+                <span>{{ newBorrowForm.value.borrowerName }}</span>
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-5 col-md-4 offset-1 offset-md-2 p-md-0">
+                <label for="bookNameTh">
+                  {{ "nameBook" | translate }} (TH)
+                </label>
+              </div>
+              <div class="col-6">
+                <span>{{ newBorrowForm.value.bookNameTh }}</span>
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-5 col-md-4 offset-1 offset-md-2 p-md-0">
+                <label for="bookNameEn">
+                  {{ "nameBook" | translate }} (EN)
+                </label>
+              </div>
+              <div class="col-6">
+                <span>{{ newBorrowForm.value.bookNameEn }}</span>
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-5 col-md-4 offset-1 offset-md-2 p-md-0">
+                <label for="borrowStart">{{
+                  "borrowStartDate" | translate
+                }}</label>
+              </div>
+              <div class="col-6">
+                <span>{{ newBorrowForm.value.borrowStart }}</span>
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-5 col-md-4 offset-1 offset-md-2 p-md-0">
+                <label for="borrowEnd">{{ "borrowEndDate" | translate }}</label>
+              </div>
+              <div class="col-6">
+                <span>{{ newBorrowForm.value.borrowEnd }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- prettier-ignore -->
+        <div class="modal-footer d-flex justify-content-center">
+          <app-button [text]="('ok' | translate)" color="add" data-bs-dismiss="modal"></app-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

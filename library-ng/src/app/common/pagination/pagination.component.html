@@ -1,0 +1,66 @@
+<div class="col-12 d-flex justify-content-center">
+  <nav>
+    <ul class="pagination m-0" *ngIf="totalPages === 0 ? false : true">
+      <li class="page-item me-1" [class.disabled]="pageCurrent === 1">
+        <a
+          [class.text-disable]="pageCurrent === 1"
+          class="page-link px-2 pointer rounded-circle"
+          (click)="onChangePage(pageCurrent - 1)"
+        >
+          <i class="fa-solid fa-angles-left"></i>
+        </a>
+      </li>
+
+      <!-- First Page Button with Ellipsis -->
+      <!-- prettier-ignore -->
+      <li class="page-item mx-1" *ngIf="pages[0] > 1" style="margin-left: 1px; margin-right: 1px">
+        <a class="page-link pointer rounded-circle" (click)="onChangePage(1)">1</a>
+      </li>
+      <!-- prettier-ignore -->
+      <li class="page-item mx-1" title="Next 5 Pages" *ngIf="pages[0] > 2">
+        <span class="page-link pointer rounded-circle" (click)="onChangePage(pageCurrent === maxVisiblePages ? pageCurrent - 4: pageCurrent - 5)">
+          ...
+        </span>
+      </li>
+
+      <li
+        class="page-item mx-1"
+        style="margin-left: 1px; margin-right: 1px"
+        *ngFor="let page of pages"
+        [class.active]="page === pageCurrent"
+        [ngClass]="{ 'active-page': page === pageCurrent }"
+      >
+        <a
+          class="page-link pointer rounded-circle"
+          (click)="onChangePage(page)"
+        >
+          {{ page }}</a
+        >
+      </li>
+
+      <!-- Last Page Button with Ellipsis -->
+      <!-- prettier-ignore -->
+      <li class="page-item mx-1" title="Next 5 Pages" *ngIf="pages[pages.length - 1] < totalPages - 1">
+        <span class="page-link pointer rounded-circle" (click)="onChangePage(totalPages - pageCurrent === 4 ? pageCurrent + 4 : pageCurrent + 5)">
+          ...
+        </span>
+      </li>
+      <!-- prettier-ignore -->
+      <li class="page-item mx-1" *ngIf="pages[pages.length - 1] < totalPages">
+        <a class="page-link pointer rounded-circle" (click)="onChangePage(totalPages)">
+          {{ totalPages }}
+        </a>
+      </li>
+
+      <li class="page-item ms-1" [class.disabled]="pageCurrent === totalPages">
+        <a
+          [class.text-disable]="pageCurrent === totalPages"
+          class="page-link px-2 pointer rounded-circle"
+          (click)="onChangePage(pageCurrent + 1)"
+        >
+          <i class="fa-solid fa-angles-right"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

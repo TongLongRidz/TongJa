@@ -1,0 +1,31 @@
+<button
+  *ngIf="ruleStyle == 'NORMAL'; else TABLE"
+  [ngStyle]="{
+    'background-color': backgroundColor,
+    width: width,
+    cursor: disabled ? 'not-allowed' : 'pointer'
+  }"
+  class="btn common-button py-1"
+  [disabled]="disabled"
+  [type]="type"
+>
+  <ng-container *ngIf="icon">
+    <i [class]="icon"></i>
+  </ng-container>
+  {{ text }}
+</button>
+
+<ng-template #TABLE>
+  <button
+    [ngStyle]="{
+      'background-color': backgroundColor,
+      width: width,
+      cursor: disabled ? 'not-allowed' : 'pointer'
+    }"
+    class="btn common-button py-1"
+    [disabled]="disabled"
+    [type]="type"
+  >
+    <i [class]="icon"></i>
+  </button>
+</ng-template>

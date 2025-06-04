@@ -1,0 +1,148 @@
+<div class="container mt-5 mb-5 p-4 bg-container rounded">
+  <div class="row">
+    <div class="col-12 mb-3">
+      <span class="text-white f16">{{ "favorite_list" | translate }}</span>
+    </div>
+
+    <div class="d-flex justify-content-between mb-3">
+      <form class="d-flex" [formGroup]="searchForm">
+        <div class="input-group">
+          <input
+            (input)="searchGet()"
+            class="form-control width-input rounded"
+            id="search"
+            type="search"
+            [attr.placeholder]="'search' | translate"
+            aria-label="Search"
+            formControlName="search"
+          />
+          <div class="input-group-append me-4">
+            <span class="input-group-text"
+              ><i class="fa-solid fa-magnifying-glass fcolor"></i
+            ></span>
+          </div>
+        </div>
+        <div class="d-flex align-items-center">
+          <app-button
+            class=""
+            (click)="resetForm()"
+            icon="fa-solid fa-arrow-rotate-right"
+            color="reset"
+          ></app-button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-body">
+          <h6 class="fw-bold text-dark">{{ "more_info" | translate }}</h6>
+          <p class="text-dark">
+            {{ "total_favorite_books" | translate }}: {{ favoriteCount }}
+          </p>
+          <h6 class="fw-bold text-muted mt-3">
+            {{ "liked_categories_list" | translate }}
+          </h6>
+          <p class="text-dark">
+            <ng-container *ngIf="dataListCatFavorite.length > 0; else noCategories">
+              <ng-container *ngFor="let category of dataListCatFavorite; let i = index">
+                <a
+                  (click)="onCategoryClick(category.categoryCode)"
+                  [ngClass]="{
+                    'category-link': true,
+                    active: selectedCategory === category.categoryCode
+                  }"
+                  class="text-info text-decoration-none"
+                >
+                  {{ category.categoryName }}
+                </a>
+                <span *ngIf="i < dataListCatFavorite.length - 1"> / </span>
+              </ng-container>
+            </ng-container>
+
+            <ng-template #noCategories>
+              <span class="text-muted">{{ "no_liked_categories" | translate }}</span>
+            </ng-template>
+          </p>
+        </div>
+      </div>
+
+      <div class="col-12 mt-5" *ngIf="dataFavorite.length == 0">
+        <div class="card">
+          <div class="card-body">
+            <div class="row align-items-center text-center">
+              <app-not-found></app-not-found>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-12 mt-4">
+      <div class="row">
+        <div class="col-6 mt-4" *ngFor="let book of dataFavorite">
+          <div class="card card-hover">
+            <div class="card-body">
+              <div class="row align-items-center">
+                <div class="col-3">
+                  <img
+                    [src]="
+                      book.bookImage || 'https://www.islamspk.com/committee/no-pict.png'
+                    "
+                    alt="Book Image"
+                    class="img-fluid border rounded"
+                    style="width: 120px; height: 150px; object-fit: cover"
+                    (click)="bookDetail(book.id)"
+                  />
+                </div>
+                <div class="col-6">
+                  {{ translate.currentLang === "th" ? book.bookNameTh : book.bookNameEn }}
+                  <p class="text-muted mb-1">
+                    {{
+                      translate.currentLang === "th" ? book.bookNameEn : book.bookNameTh
+                    }}
+                  </p>
+                  <p class="text-primary mb-1">
+                    {{ "category" | translate }}: {{ book.categoryName }}
+                  </p>
+                  <p class="text-secondary mb-0">
+                    {{ "book_code" | translate }}: {{ book.bookCode }}
+                  </p>
+
+                  <!-- <div class="d-flex align-items-center mt-1">
+                    <i
+                      class="fa-solid fa-book-open-reader me-2 text-primary"
+                    ></i>
+                    <p class="mb-0 text-dark">
+                      จำนวนการยืม: {{ book.borrowCount || 0 }}
+                    </p>
+                  </div> -->
+                </div>
+                <div class="col-3 text-end">
+                  <div class="btn position-absolute" style="top: 10px; right: 10px">
+                    <i
+                      class="fa-solid fa-heart fa-lg"
+                      [class.text-danger]="book.favoriteStatus"
+                      (click)="confirmDelete(book.bookCode)"
+                    >
+                    </i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 mt-4">
+          <app-pagination
+            [totalPages]="totalPages"
+            [pageCurrent]="page"
+            (pageChange)="onPageChange($event)"
+          ></app-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-spinner *ngIf="loadingTable"></app-spinner>

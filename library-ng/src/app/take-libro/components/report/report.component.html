@@ -1,0 +1,572 @@
+<div class="container bg-container mt-5 p-4 rounded shadow-sm">
+  <div *ngIf="loading">
+    <app-spinner></app-spinner>
+  </div>
+
+  <h5 class="text-white mb-3">{{ "list" | translate }}</h5>
+  <div class="col-12">
+    <div class="row gx-0 gy-3 d-flex justify-content-start">
+      <div class="col-2 card mt-2 color1 me-3">
+        <div class="card-header text-center text-white">
+          <h6 class="mb-0 fw-bold">{{ "totalBorrowing" | translate }}</h6>
+        </div>
+        <div class="card-body text-center">
+          <p class="card-text">
+            <i class="fa-solid fa-book"></i> {{ reportData?.totalBorrowings }}
+            {{ "list" | translate }}
+          </p>
+        </div>
+      </div>
+
+      <div class="col-2 card mt-2 color2">
+        <div class="card-header text-center bg-primary text-white">
+          <h6 class="mb-0 fw-bold">{{ "borrower_count" | translate }}</h6>
+        </div>
+        <div class="card-body text-center">
+          <p class="card-text">
+            <i class="fa-regular fa-user fa-sm"></i> {{ reportData?.totalProfileBorrow }}
+            {{ "person" | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 mt-5">
+      <h5 class="text-white">{{ "book_return_status" | translate }}</h5>
+      <div class="mt-1">
+        <div class="row gx-0 d-flex justify-content-between text-center">
+          <div class="col-4 p-4 color3 rounded-lefts">
+            <span class="fw-bold"
+              >{{ "returned_items" | translate }} {{ reportData?.totalNoReturns }}
+              {{ "list" | translate }}</span
+            >
+          </div>
+          <div class="col-4 p-4 color4">
+            <span class="fw-bold"
+              >{{ "unreturned_items" | translate }} {{ reportData?.totalReturns }}
+              {{ "list" | translate }}</span
+            >
+          </div>
+          <div class="col-4 p-4 color1 rounded-rights">
+            <span class="fw-bold"
+              >{{ "overdue_items" | translate }} {{ reportData?.countOverReturns }}
+              {{ "list" | translate }}</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <h5 class="text-white">{{ "top_5_frequent_users" | translate }}</h5>
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex align-items-start">
+            <div
+              class="nav flex-column nav-pills me-3"
+              id="v-pills-tab"
+              role="tablist"
+              aria-orientation="vertical"
+            >
+              <button
+                (click)="setPeriod('week')"
+                class="nav-link active text-success fw-bold"
+                id="v-week-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#week"
+                type="button"
+                role="tab"
+                aria-controls="week"
+                aria-selected="false"
+              >
+                {{ "week" | translate }}
+              </button>
+              <button
+                (click)="setPeriod('month')"
+                class="nav-link text-warning fw-bold"
+                id="v-month-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#month"
+                type="button"
+                role="tab"
+                aria-controls="month"
+                aria-selected="true"
+              >
+                {{ "month" | translate }}
+              </button>
+              <button
+                (click)="setPeriod('year')"
+                class="nav-link text-info fw-bold"
+                id="v-year-tab"
+                data-bs-toggle="pill"
+                data-bs-target="#year"
+                type="button"
+                role="tab"
+                aria-controls="year"
+                aria-selected="false"
+              >
+                {{ "year" | translate }}
+              </button>
+            </div>
+
+            <div class="tab-content w-100" id="v-pills-tabContent">
+              <div
+                class="tab-pane fade"
+                [ngClass]="{ 'show active': period === 'week' }"
+                id="week"
+                role="tabpanel"
+                aria-labelledby="v-week-tab"
+                tabindex="0"
+              >
+                <table class="table table-striped text-center align-middle">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width: 10%">
+                        {{ "number_rank" | translate }}
+                      </th>
+                      <th scope="col" style="width: 16%">{{ "idUser" | translate }}</th>
+                      <th scope="col" style="width: 16%">{{ "profile" | translate }}</th>
+                      <th scope="col" style="width: 22%">{{ "name" | translate }}</th>
+                      <th scope="col" style="width: 16%">{{ "amount" | translate }}</th>
+                      <th scope="col" style="width: 10%">{{ "details" | translate }}</th>
+                      <th scope="col" style="width: 10%">
+                        {{ "position_rank" | translate }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let dataMosts of dataMost; let i = index">
+                    <tr>
+                      <td>{{ (page - 1) * size + i + 1 }}</td>
+                      <td>{{ dataMosts.profileCode }}</td>
+                      <td>
+                        <img
+                          class="rounded-circle"
+                          [src]="dataMosts.profileImage"
+                          onerror="this.src='./takeLibro/icon_user.png'"
+                          height="50px"
+                          width="50px"
+                        />
+                      </td>
+                      <td>{{ dataMosts.firstName }} {{ dataMosts.lastName }}</td>
+                      <td>{{ dataMosts.borrowCount }}</td>
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                          (click)="showDetails(dataMosts)"
+                        >
+                          {{ "details" | translate }}
+                        </button>
+                      </td>
+                      <td>
+                        <i
+                          *ngIf="i == 0"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #ffd700"
+                        ></i>
+                        <i
+                          *ngIf="i == 1"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #c0c0c0"
+                        ></i>
+                        <i
+                          *ngIf="i == 2"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #cd7f32"
+                        ></i>
+                        <i
+                          *ngIf="i >= 3 && i < 5"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #cd7f32"
+                        ></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="dataMost?.length === 0">
+                    <tr>
+                      <td
+                        colspan="7"
+                        style="text-align: center; font-size: 16px; color: #808080"
+                      >
+                        <p style="padding-top: 20px">
+                          <app-not-found></app-not-found>
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div
+                class="tab-pane fade"
+                [ngClass]="{ 'show active': period === 'month' }"
+                id="month"
+                role="tabpanel"
+                aria-labelledby="v-month-tab"
+                tabindex="0"
+              >
+                <table class="table table-striped text-center align-middle">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width: 10%">
+                        {{ "number_rank" | translate }}
+                      </th>
+                      <th scope="col" style="width: 16%">{{ "idUser" | translate }}</th>
+                      <th scope="col" style="width: 16%">{{ "profile" | translate }}</th>
+                      <th scope="col" style="width: 22%">{{ "name" | translate }}</th>
+                      <th scope="col" style="width: 16%">{{ "amount" | translate }}</th>
+                      <th scope="col" style="width: 10%">{{ "details" | translate }}</th>
+                      <th scope="col" style="width: 10%">
+                        {{ "position_rank" | translate }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let dataMosts of dataMost; let i = index">
+                    <tr>
+                      <td>{{ (page - 1) * size + i + 1 }}</td>
+                      <td>{{ dataMosts.profileCode }}</td>
+                      <td>
+                        <img
+                          class="rounded-circle"
+                          [src]="dataMosts.profileImage"
+                          onerror="this.src='./takeLibro/icon_user.png'"
+                          height="50px"
+                          width="50px"
+                        />
+                      </td>
+                      <td>{{ dataMosts.firstName }} {{ dataMosts.lastName }}</td>
+                      <td>{{ dataMosts.borrowCount }}</td>
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                          (click)="showDetails(dataMosts)"
+                        >
+                          {{ "details" | translate }}
+                        </button>
+                      </td>
+                      <td>
+                        <i
+                          *ngIf="i == 0"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #ffd700"
+                        ></i>
+                        <i
+                          *ngIf="i == 1"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #c0c0c0"
+                        ></i>
+                        <i
+                          *ngIf="i == 2"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #cd7f32"
+                        ></i>
+                        <i
+                          *ngIf="i >= 3 && i < 5"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #cd7f32"
+                        ></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="dataMost?.length === 0">
+                    <tr>
+                      <td
+                        colspan="7"
+                        style="text-align: center; font-size: 16px; color: #808080"
+                      >
+                        <p style="padding-top: 20px">
+                          <app-not-found></app-not-found>
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div
+                class="tab-pane fade"
+                [ngClass]="{ 'show active': period === 'year' }"
+                id="year"
+                role="tabpanel"
+                aria-labelledby="v-year-tab"
+                tabindex="0"
+              >
+                <table class="table table-striped text-center align-middle">
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width: 10%">
+                        {{ "number_rank" | translate }}
+                      </th>
+                      <th scope="col" style="width: 16%">{{ "idUser" | translate }}</th>
+                      <th scope="col" style="width: 16%">{{ "profile" | translate }}</th>
+                      <th scope="col" style="width: 22%">{{ "name" | translate }}</th>
+                      <th scope="col" style="width: 16%">{{ "amount" | translate }}</th>
+                      <th scope="col" style="width: 10%">{{ "details" | translate }}</th>
+                      <th scope="col" style="width: 10%">
+                        {{ "position_rank" | translate }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody *ngFor="let dataMosts of dataMost; let i = index">
+                    <tr>
+                      <td>{{ (page - 1) * size + i + 1 }}</td>
+                      <td>{{ dataMosts.profileCode }}</td>
+                      <td>
+                        <img
+                          class="rounded-circle"
+                          [src]="dataMosts.profileImage"
+                          onerror="this.src='./takeLibro/icon_user.png'"
+                          height="50px"
+                          width="50px"
+                        />
+                      </td>
+                      <td>{{ dataMosts.firstName }} {{ dataMosts.lastName }}</td>
+                      <td>{{ dataMosts.borrowCount }}</td>
+                      <td>
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-sm"
+                          data-bs-toggle="modal"
+                          data-bs-target="#exampleModal"
+                          (click)="showDetails(dataMosts)"
+                        >
+                          {{ "details" | translate }}
+                        </button>
+                      </td>
+                      <td>
+                        <i
+                          *ngIf="i == 0"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #ffd700"
+                        ></i>
+                        <i
+                          *ngIf="i == 1"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #c0c0c0"
+                        ></i>
+                        <i
+                          *ngIf="i == 2"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #cd7f32"
+                        ></i>
+                        <i
+                          *ngIf="i >= 3 && i < 5"
+                          class="fa-solid fa-trophy fa-lg"
+                          style="color: #cd7f32"
+                        ></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="dataMost?.length === 0">
+                    <tr>
+                      <td
+                        colspan="7"
+                        style="text-align: center; font-size: 16px; color: #808080"
+                      >
+                        <p style="padding-top: 20px">
+                          <app-not-found></app-not-found>
+                        </p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mt-1">
+        <app-pagination
+          [totalPages]="totalPages"
+          [pageCurrent]="page"
+          (pageChange)="onPageChange($event)"
+        ></app-pagination>
+      </div>
+
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">
+                {{ "details" | translate }}
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">{{ "codeBook" | translate }}</th>
+                    <th scope="col">{{ "nameBook" | translate }}</th>
+                    <th scope="col">{{ "borrowingDate" | translate }}</th>
+                    <th scope="col">{{ "returnDate" | translate }}</th>
+                    <th scope="col">{{ "statusName" | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of selectedBorrower?.borrowList; let i = index">
+                    <th scope="row">{{ i + 1 }}</th>
+                    <td>{{ item.bookCode }}</td>
+                    <td>
+                      {{ getLanguages === "en" ? item.bookNameEn : item.bookNameTh }}
+                    </td>
+                    <td>{{ forDate(item.borrowStart, getLanguages) }}</td>
+                    <td>{{ forDate(item.borrowEnd, getLanguages) }}</td>
+                    <td class="align-middle text-center">
+                      <div class="d-flex justify-content-center">
+                        <div class="d-flex w-100">
+                          <div class="d-flex justify-content-end pe-2 w-50">
+                            <div
+                              class="status-icon-center"
+                              [style.background-color]="
+                                item.borrowStatus === 0 ? '#5ddd1d' : '#FF3333'
+                              "
+                            >
+                              <span
+                                class="status-icon-border"
+                                [style.background-color]="
+                                  item.borrowStatus === 0 ? '#5ddd1d' : '#FF3333'
+                                "
+                              ></span>
+                            </div>
+                          </div>
+                          <div
+                            class="d-flex w-50 text-truncate"
+                            [ngClass]="
+                              item.borrowStatus === 0 ? 'text-success' : 'text-danger'
+                            "
+                          >
+                            {{
+                              item.borrowStatus === 0
+                                ? ("khun" | translate)
+                                : ("yum" | translate)
+                            }}
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="modal-footer">
+              <app-button
+                [text]="'close' | translate"
+                color="cancel"
+                data-bs-dismiss="modal"
+              ></app-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="formDate">
+      <div class="col-12 mt-5 d-flex justify-content-start">
+        <app-datepicker-th
+          ngDefaultControl
+          [bsValue]="this.startDate?.value"
+          dateType="TH"
+          [placeholder]="'dateFormat' | translate"
+          [language]="getLanguages"
+          (value)="onStartDateChange($event)"
+          id="startDate"
+          formControlName="startDate"
+        ></app-datepicker-th>
+        <span class="mx-2 text-white mt-2">{{ "to" | translate }}</span>
+        <app-datepicker-th
+          ngDefaultControl
+          [bsValue]="this.endDate?.value"
+          dateType="TH"
+          [placeholder]="'dateFormat' | translate"
+          [language]="getLanguages"
+          (value)="onEndDateChange($event)"
+          id="endDate"
+          formControlName="endDate"
+        ></app-datepicker-th>
+      </div>
+    </form>
+
+    <div class="col-12 mt-3 mb-5">
+      <div class="row">
+        <!-- กราฟการยืมหนังสือ -->
+        <div class="col-6">
+          <h5 class="text-white">{{ "borrowing_statistics" | translate }}</h5>
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="chartbook">
+                <ng-container
+                  *ngIf="
+                    chartOptions?.series && chartOptions?.series?.length > 0;
+                    else noData
+                  "
+                >
+                  <apx-chart
+                    [series]="chartOptions?.series"
+                    [chart]="chartOptions?.chart"
+                    [xaxis]="chartOptions?.xaxis"
+                    [title]="chartOptions?.title"
+                    [tooltip]="{ enabled: true }"
+                  >
+                  </apx-chart>
+                </ng-container>
+                <ng-template #noData>
+                  <app-not-found></app-not-found>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- กราฟการยืมตามหมวดหมู่ -->
+        <div class="col-6">
+          <h5 class="text-white">{{ "category_borrowing_statistics" | translate }}</h5>
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="chartcat">
+                <ng-container
+                  *ngIf="chartcat?.series && chartcat?.series?.length > 0; else noData1"
+                >
+                  <apx-chart
+                    [series]="chartcat.series"
+                    [chart]="chartcat.chart"
+                    [labels]="chartcat.labels"
+                    [title]="chartcat.title"
+                    [theme]="chartcat.theme"
+                    [responsive]="chartcat.responsive"
+                    [legend]="{ show: true, position: 'top', horizontalAlign: 'center' }"
+                    [tooltip]="{ enabled: true }"
+                  >
+                  </apx-chart>
+                </ng-container>
+
+                <ng-template #noData1>
+                  <app-not-found></app-not-found>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

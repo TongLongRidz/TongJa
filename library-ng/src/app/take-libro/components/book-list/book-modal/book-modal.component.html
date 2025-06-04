@@ -1,0 +1,259 @@
+<div class="modal fade" id="modalManagement" (hidden.bs.modal)="resetForm()">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 600px">
+    <div class="modal-content">
+      <form [formGroup]="newBookForm" (ngSubmit)="onFormSubmit()">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">
+            {{
+              userBookManage
+                ? ("addBook" | translate)
+                : ("editBook" | translate)
+            }}
+          </h1>
+
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            id="closeModalButtonList"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="mx-4 mt-2">
+            <div class="d-flex justify-content-center">
+              <!-- Clickable area for image selection -->
+              <label
+                for="bookImageInput"
+                class="d-flex justify-content-center align-items-center border border-dark rounded"
+                style="width: 160px; height: 230px"
+              >
+                <img
+                  class="object-fit-cover book-image rounded"
+                  style="margin-top: 0.5px"
+                  [src]="
+                    newBookForm.get('bookImage')?.value
+                      ? newBookForm.get('bookImage')?.value
+                      : bookImagePreview
+                  "
+                  width="130px"
+                  height="190px"
+                />
+                <input
+                  type="file"
+                  id="bookImageInput"
+                  (change)="onFileSelected($event)"
+                  style="display: none"
+                  accept="image/*"
+                />
+              </label>
+            </div>
+            <div class="d-flex justify-content-center mt-2">
+              <button
+                class="btn btn-secondary"
+                type="button"
+                (click)="triggerFileInput()"
+              >
+                <i class="fa-solid fa-image"></i>
+              </button>
+            </div>
+            <div class="row p-2 mt-2 align-items-center">
+              <div class="col-md-3 offset-md-1 p-md-0">
+                <label
+                  for="bookNameTh"
+                  class="text-nowrap"
+                  [ngClass]="{
+                    'text-danger':
+                      newBookForm.get('bookNameTh')?.invalid &&
+                      newBookForm.get('bookNameTh')?.touched
+                  }"
+                >
+                  {{ "nameBook" | translate }} (TH)
+                  {{
+                    newBookForm.get("bookNameTh")?.invalid &&
+                    newBookForm.get("bookNameTh")?.touched
+                      ? " *"
+                      : ""
+                  }}
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  placeholder="ชื่อหนังสือ (TH)"
+                  [attr.placeholder]="('nameBook' | translate) + ' (TH)'"
+                  formControlName="bookNameTh"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-3 offset-md-1 p-md-0">
+                <label
+                  for="bookNameEn"
+                  class="text-nowrap"
+                  [ngClass]="{
+                    'text-danger':
+                      newBookForm.get('bookNameEn')?.invalid &&
+                      newBookForm.get('bookNameEn')?.touched
+                  }"
+                >
+                  {{ "nameBook" | translate }} (EN)
+                  {{
+                    newBookForm.get("bookNameEn")?.invalid &&
+                    newBookForm.get("bookNameEn")?.touched
+                      ? " *"
+                      : ""
+                  }}
+                </label>
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  [attr.placeholder]="('nameBook' | translate) + ' (EN)'"
+                  formControlName="bookNameEn"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-3 offset-md-1 p-md-0">
+                <label
+                  for="bookBarCode"
+                  [ngClass]="{
+                    'text-danger':
+                      newBookForm.get('bookBarCode')?.invalid &&
+                      newBookForm.get('bookBarCode')?.touched
+                  }"
+                  >{{ "barcodeBook" | translate }}
+                  {{
+                    newBookForm.get("bookBarCode")?.invalid &&
+                    newBookForm.get("bookBarCode")?.touched
+                      ? " *"
+                      : ""
+                  }}</label
+                >
+              </div>
+              <div class="col-md-8">
+                <input
+                  type="text"
+                  [attr.placeholder]="
+                    ('barcodeBook' | translate) +
+                    ' ' +
+                    ('uppercase' | translate)
+                  "
+                  formControlName="bookBarCode"
+                  class="form-control"
+                  required
+                />
+              </div>
+            </div>
+            <div class="row p-2 align-items-center">
+              <div class="col-md-3 offset-md-1 p-md-0">
+                <label
+                  for="categoryCode"
+                  [ngClass]="{
+                    'text-danger':
+                      newBookForm.get('categoryCode')?.invalid &&
+                      newBookForm.get('categoryCode')?.touched
+                  }"
+                  >{{ "type" | translate }}
+                  {{
+                    newBookForm.get("categoryCode")?.invalid &&
+                    newBookForm.get("categoryCode")?.touched
+                      ? " *"
+                      : ""
+                  }}</label
+                >
+              </div>
+              <div class="col-md-8">
+                <select class="form-select" formControlName="categoryCode">
+                  <option
+                    *ngFor="let category of categoryList"
+                    [value]="category.categoryCode"
+                  >
+                    {{ category.categoryName }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row p-2 align-items-center" *ngIf="!userBookManage">
+              <div class="col-5 col-md-3 offset-md-1 p-md-0 text-truncate">
+                <label for="bookStatus">{{ "statusName" | translate }}</label>
+              </div>
+              <div class="col-7 col-md-8">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input large-checkbox"
+                    type="checkbox"
+                    id="bookStatusToggle"
+                    formControlName="bookStatus"
+                    (change)="onBookStatusChange($event)"
+                  />
+                  <label
+                    class="form-check-label check-box-label"
+                    for="bookStatusToggle"
+                  >
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="modal-footer d-flex justify-content-center">
+          <app-button [text]="'save' | translate" type="submit"></app-button>
+          <app-button *ngIf="userBookManage" type="reset" [text]="'clear' | translate" color="reset" width="90px" (click)="resetForm()"></app-button>
+          <app-button *ngIf="!true" data-bs-dismiss="modal"></app-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crop -->
+<div class="modal fade" id="cropModalBookList">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">แก้ไขขนาดรูปภาพ</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="closeModalCropBookList"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <image-cropper
+            style="max-height: 500px"
+            *ngIf="imageChangedEvent"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="5.05 / 7.3"
+            (imageCropped)="onCropBookList($event)"
+          ></image-cropper>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <app-button
+          type="button"
+          color="add"
+          [text]="'save' | translate"
+          icon=""
+          (click)="onSetCropBookList()"
+        ></app-button>
+
+        <app-button
+          data-bs-dismiss="modal"
+          color="cancel"
+          text="ยกเลิก"
+        ></app-button>
+      </div>
+    </div>
+  </div>
+</div>

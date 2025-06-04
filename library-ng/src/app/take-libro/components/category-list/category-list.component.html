@@ -1,0 +1,245 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 p-0">
+      <span class="mt-2 f16">{{ "categoryList" | translate }}</span>
+      <div class="d-flex justify-content-between">
+        <form class="d-flex" [formGroup]="searchForm">
+          <div class="input-group me-5">
+            <input
+              (input)="searchGet($event)"
+              class="form-control width-input rounded"
+              type="search"
+              [attr.placeholder]="'search' | translate"
+              aria-label="Search"
+              formControlName="search"
+            />
+            <div class="input-group-append me-4 rounded">
+              <span class="input-group-text">
+                <i class="fa-solid fa-magnifying-glass fcolor"></i>
+              </span>
+            </div>
+          </div>
+        </form>
+        <div>
+          <app-button
+            (click)="openAddModal()"
+            color="styb1"
+            width="140px"
+            [text]="'addCategory' | translate"
+            icon="fa-solid fa-plus"
+            data-bs-toggle="modal"
+            data-bs-target="#modelcategory"
+          >
+          </app-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card m-0 p-0 mt-3 bg-container">
+      <div class="card-body p-4">
+        <table class="table table-striped overflow-hidden rounded p-0 m-0">
+          <thead>
+            <tr style="height: 55px">
+              <th
+                scope="col"
+                class="text-center align-middle tbc"
+                style="width: 5%"
+              >
+                <i
+                  [ngClass]="{
+                    'fa-arrow-up-wide-short': !Sort,
+                    'fa-arrow-down-short-wide': Sort
+                  }"
+                  class="fa-solid"
+                  (click)="toggleSort()"
+                  style="cursor: pointer"
+                ></i>
+              </th>
+              <th
+                class="text-center align-middle tbc"
+                scope="col"
+                style="width: 10%"
+              >
+                {{ "categoryCode" | translate }}
+              </th>
+              <th class="align-middle tbc" scope="col" style="width: 72%">
+                {{ "categoryName" | translate }}
+              </th>
+              <th
+                scope="col"
+                style="width: 13%"
+                class="text-center align-middle tbc"
+              >
+                {{ "manage" | translate }}
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="loadingTable" class="text-center">
+            <tr>
+              <td colspan="8" class="position-relative">
+                <app-spinner></app-spinner>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr *ngFor="let category of dataCategory; let i = index">
+              <td id="id" scope="row" class="fw-bold text-center align-middle">
+                {{ (page - 1) * size + i + 1 }}
+              </td>
+              <td class="text-center align-middle">
+                {{ category.categoryCode }}
+              </td>
+              <td class="align-middle">
+                {{ category.categoryName }}
+              </td>
+              <td class="align-middle">
+                <div class="d-flex justify-content-center">
+                  <div
+                    class="d-flex justify-content-around"
+                    style="min-width: 150px; max-width: 170px"
+                  >
+                    <app-button
+                      (click)="openEditModal(category)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modelcategory"
+                      icon="fa-solid fa-pen-to-square"
+                      ruleStyle="TABLE"
+                      color="edit"
+                      class="mx-1 mx-lg-0"
+                    />
+                    <app-button
+                      *ngIf="checkNgIfRemoveOne(category.categoryCode)"
+                      (click)="confirmDelete(category)"
+                      icon="fa-solid fa-trash"
+                      ruleStyle="TABLE"
+                      color="delete"
+                      class="mx-1 mx-lg-0"
+                    />
+                    <app-button
+                      [disabled]="true"
+                      *ngIf="!checkNgIfRemoveOne(category.categoryCode)"
+                      icon="fa-solid fa-trash"
+                      ruleStyle="TABLE"
+                      color="disabled"
+                      class="mx-1 mx-lg-0"
+                    />
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr *ngIf="!loadingTable && dataCategory.length === 0">
+              <td
+                colspan="6"
+                style="text-align: center; font-size: 16px; color: #808080"
+              >
+                <app-not-found></app-not-found>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table m-0">
+          <tr
+            *ngFor="let _ of [].constructor(10 - dataCategory.length)"
+            style="height: 53px"
+          >
+            <td></td>
+          </tr>
+        </table>
+        <div class="d-flex justify-content-center pt-4">
+          <app-pagination
+            [totalPages]="totalPages"
+            [pageCurrent]="page"
+            (pageChange)="onPageChange($event)"
+          ></app-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="modelcategory"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+>
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 600px">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          {{
+            isEditMode
+              ? ("editCategory" | translate)
+              : ("addCategory" | translate)
+          }}
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3" *ngIf="isEditMode">
+            <label for="category" class="form-label">{{
+              "categoryCode" | translate
+            }}</label>
+            <input
+              formControlName="categoryCode"
+              type="text"
+              class="form-control disble-form"
+              readonly
+            />
+          </div>
+          <div class="mb-3">
+            <label for="categoryName" class="form-label">{{
+              "categoryName" | translate
+            }}</label>
+            <input
+              pattern="^\S.*\S$"
+              title="ชื่อหมวดหมู่ห้ามเป็นช่องว่าง"
+              [attr.placeholder]="'enterCategoryName' | translate"
+              formControlName="categoryName"
+              type="text"
+              class="form-control"
+            />
+          </div>
+          <div
+            *ngIf="
+              categoryForm.get('categoryName')?.invalid &&
+              (categoryForm.get('categoryName')?.dirty ||
+                categoryForm.get('categoryName')?.touched)
+            "
+            class="text-danger"
+          >
+            <div *ngIf="categoryForm.get('categoryName')?.errors?.['required']">
+              * {{ "pleaseEnterCategoryName" | translate }}
+            </div>
+            <div *ngIf="categoryForm.get('categoryName')?.errors?.['pattern']">
+              {{ "categoryNameCannotBeEmpty" | translate }}
+            </div>
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <app-button
+              type="submit"
+              color="add"
+              [text]="'ok' | translate"
+              icon=""
+            ></app-button>
+            <app-button
+              id="closeModalButtonCategory"
+              data-bs-dismiss="modal"
+              color="cancel"
+              [text]="'cancel' | translate"
+            ></app-button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

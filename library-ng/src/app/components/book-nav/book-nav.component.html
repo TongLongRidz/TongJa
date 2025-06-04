@@ -1,0 +1,683 @@
+<header *ngIf="getToken" class="pb-3 pt-1 mb-5" style="height: 80px">
+  <!-- custom-navbar -->
+  <div class="p-0 d-none d-lg-block p-2 my-4 shadows-box" style="background: #ffffff">
+    <div class="p-0 my-1 d-flex justify-content-between">
+      <!-- align-items-center justify-content-center offset-md-1 -->
+      <div class="col-md-10 d-flex menu menu-1">
+        <ul class="nav f16">
+          <div class="dropdown">
+            <div class="dropbtn p-1 rounded-circle">
+              <img width="40px" height="40px" class="rounded-circle shadows-box"
+                [src]="statusProjects ? iconTakeLibro : iconTakeSome" />
+            </div>
+            <div class="dropdown-content rounded-top rounded-bottom">
+              <div class="rounded-top" (click)="statusProjectsFunc(true)">TakeLibro</div>
+              <div class="rounded-bottom" (click)="statusProjectsFunc(false)">
+                TakeSomething
+              </div>
+            </div>
+          </div>
+          <li class="nav-item me-2">
+            <div class="d-flex flex-row align-items-center me-2 a">
+              <a data-hover="หน้าแรก" class="nav-link m-1 navbar-brand" aria-current="page"
+                routerLink="/{{ projectPath }}/home" routerLinkActive="active">
+                <!-- <label for=""><i class="fa-solid fa-house text-white fa-s"></i></label> -->
+                {{ "home" | translate }}
+              </a>
+            </div>
+          </li>
+          <li class="nav-item me-2" *ngIf="auth.hasRole(['R001', 'R003'])">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/borrow-book"
+              routerLinkActive="active">
+              {{ "bookBorrowList" | translate }}
+            </a>
+          </li>
+          <li class="nav-item me-2" *ngIf="auth.hasRole(['R001', 'R003'])">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/books"
+              routerLinkActive="active">
+              {{ "bookList" | translate }}
+            </a>
+          </li>
+          <li class="nav-item me-2" *ngIf="auth.hasRole(['R001', 'R003'])">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/categories"
+              routerLinkActive="active">
+              {{ "manageCategory" | translate }}
+            </a>
+          </li>
+          <li class="nav-item me-2 navbar-brand" *ngIf="auth.hasRole(['R001', 'R002', 'R003'])">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/history"
+              routerLinkActive="active">
+              {{ "borrowHistory" | translate }}
+            </a>
+          </li>
+          <li class="nav-item me-2 navbar-brand" *ngIf="auth.hasRole(['R001', 'R002', 'R003'])">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/providers"
+              routerLinkActive="active">
+              {{ "providers" }}
+            </a>
+          </li>
+          <li class="nav-item me-2 navbar-brand">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/profile"
+              routerLinkActive="active">
+              {{ "manageUsers" | translate }}
+            </a>
+          </li>
+          <!-- <li
+            class="nav-item me-2 navbar-brand text-white"
+            *ngIf="auth.hasRole(['R001', 'R003'])"
+          >
+            <a
+              class="nav-link m-1 navbar-brand text-white"
+              aria-current="page"
+              routerLink="/report"
+              routerLinkActive="active"
+            >
+              {{ "report" | translate }}
+            </a>
+          </li> -->
+          <li class="nav-item me-2 navbar-brand" *ngIf="auth.hasRole(['R001', 'R003'])">
+            <a class="nav-link m-1 navbar-brand" aria-current="page" routerLink="/{{ projectPath }}/dashboard"
+              routerLinkActive="active">
+              {{ "report" | translate }}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- icon user -->
+      <div class="d-flex justify-content-end align-items-center col-md-1">
+        <div class="d-flex align-items-center">
+          <div class="form-switch mx-2 my-0 mb-1">
+            <input class="form-check-input ptr shadows-box" type="checkbox" (change)="switchLanguage($event, 'EVENT')"
+              [checked]="currentLanguage === 'en'" />
+          </div>
+          <span class="f16">{{ getLanguages == "en" ? "EN" : "TH" }}</span>
+        </div>
+
+        <div class="mx-4">
+          <div class="btn-group">
+            <a class="dropdown icon-bell text-dark" href="#" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="fa-solid fa-bell fa-xl"></i>
+              <span *ngIf="unreadNotificationsCount > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ unreadNotificationsCount > 99 ? "99+" : unreadNotificationsCount }}
+                <span class="visually-hidden">{{ "unreadMessages" | translate }}</span>
+              </span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end p-0" style="width: 500px">
+              <div class="notification-scroll">
+                <div class="row m-3">
+                  <div class="col-6">
+                    <h6 class="fw-bold">{{ "notifications" | translate }}</h6>
+                  </div>
+                  <div class="col-6 text-end ptr">
+                    <a *ngIf="dataNoti.length > 0" (click)="IsReadAll($event)"
+                      class="noti-link fw-bold text-secondary text-decoration-none me-3">
+                      {{ "allRead" | translate }}
+                    </a>
+                    <a *ngIf="dataNoti.length > 0" (click)="confirmDelete($event)"
+                      class="noti-link fw-bold text-danger text-decoration-none">
+                      {{ "deleteAll" | translate }}
+                    </a>
+                  </div>
+                </div>
+                <ul class="list-unstyled px-3">
+                  <li *ngFor="let noti of dataNoti" class="mb-2">
+                    <hr />
+                    <a class="dropdown-item pointer" (click)="markIsRead(noti); openDetailModal(noti)"
+                      data-bs-toggle="modal" data-bs-target="#notificationDetail">
+                      <div>
+                        {{ noti.sendDate | date : "dd/MM/yyyy HH:mm น." }}
+                        <span *ngIf="noti.isRead === 0 && isNew(noti.sendDate)" class="badge bg-danger ms-2">{{ "new" |
+                          translate }}</span>
+                      </div>
+                      <div class="fs-6 text-truncate" [ngClass]="{
+                          'text-dark fw-bold': noti.isRead === 0,
+                          'text-muted': noti.isRead === 1
+                        }" [innerHTML]="
+                          getLanguages === 'en'
+                            ? noti.notiMsgEn
+                            : (noti.notiMsgTh | lineBreak)
+                        ">
+                        <i *ngIf="noti.isRead === 1" class="fa-regular fa-envelope-open me-2"></i>
+                        <i *ngIf="noti.isRead === 0" class="fa-regular fa-envelope me-2"></i>
+                      </div>
+                    </a>
+                  </li>
+                  <li *ngIf="dataNoti.length === 0" class="text-center my-3">
+                    {{ "noNotifications" | translate }}
+                  </li>
+                </ul>
+              </div>
+            </ul>
+          </div>
+        </div>
+        <!-- prettier-ignore -->
+        <div class="nav-item dropdown me-3 ">
+          <a class="icon-wrapper nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img width="40px" height="40px" class="rounded-circle shadows-box"
+              [src]="profileData.image ? profileData.image : './takeLibro/icon_user.png'">
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <button (click)="onChangeEditProfile('INFO')" class="dropdown-item py-2" data-bs-toggle="modal"
+                data-bs-target="#profileHeaderModal">
+                <strong>{{profileData?.firstName}} {{profileData?.lastName}}</strong>
+                <span class="highlight text-center" [ngClass]="{
+                      'text-success': auth.hasRole(['R002']), 
+                      'text-primary': auth.hasRole(['R001']),    
+                      'text-warning': auth.hasRole(['R003']),  
+                    }">
+                  <i class="fa-solid fa-address-card fa-xl"></i>
+                </span>
+              </button>
+            </li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <li>
+              <a class="dropdown-item mb-2" routerLink="/{{ projectPath }}/favorite">
+                <!-- <i class="fa-regular fa-rectangle-list "></i> -->
+                <i class="fa-regular fa-heart fa-xl me-2"></i>
+                {{ 'favorite_list' | translate}}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item mb-2" routerLink="/{{ projectPath }}/my-borrows-list">
+                <i class="fa-regular fa-rectangle-list fa-xl me-2"></i>
+                {{ 'myBorrowList' | translate}}
+              </a>
+            </li>
+
+            <li>
+              <a class="dropdown-item mb-2" routerLink="/{{ projectPath }}/my-history">
+                <i class="fa-solid fa-clock-rotate-left fa-xl me-2"></i>
+                {{ 'myBorrowHistory' | translate}}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item mb-2" routerLink="/login" (click)="clearToken()">
+                <i class="fa-solid fa-arrow-right-from-bracket fa-xl me-2"></i>
+                {{ 'logout' | translate}}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE -->
+  <!-- prettier-ignore -->
+  <div class="container p-0 px-3 px-lg-0 d-block d-lg-none d-flex justify-content-between align-items-center">
+    <a href="/{{ projectPath }}/home"><i class="fa-solid fa-house menu-home text-dark"></i></a>
+    <div class="d-flex justify-content-end">
+      <!-- bell -->
+      <div class="d-flex align-items-center justify-content-end">
+        <nav class="navbar d-flex justify-content-end">
+          <div class="container-fluid d-flex justify-content-end p-0 btn-group">
+            <div class="d-flex align-items-center">
+              <div class="form-switch mx-2 my-0 mb-1">
+                <input class="form-check-input ptr" type="checkbox" (change)="switchLanguage($event, 'EVENT')"
+                  [checked]="currentLanguage === 'en'" />
+              </div>
+              <span class="f16">{{ getLanguages == "en" ? "EN" : "TH" }}</span>
+            </div>
+
+            <button class="navbar-toggler mx-2" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+              (click)="resetSelectedNotis()">
+              <i class="fa-solid fa-bell text-dark menu-home"></i>
+              <span *ngIf="unreadNotificationsCount > 0"
+                class="position-absolute text-white top-25 start-75 translate-middle px-1 rounded-pill bg-danger"
+                style="font-size: 16px; padding-top: 0.5px; padding-bottom: 0.5px;">
+                {{
+                unreadNotificationsCount > 99
+                ? "99+"
+                : unreadNotificationsCount
+                }}
+                <span class="visually-hidden">{{ "unreadMessages" | translate }}</span>
+              </span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-0" style="width: 500px">
+              <div class="notification-scroll">
+                <div class="row m-3">
+                  <div class="col-6">
+                    <h6 class="fw-bold">{{ "notifications" | translate }}</h6>
+                  </div>
+                  <div class="col-6 text-end">
+                    <a *ngIf="dataNoti.length > 0" (click)="IsReadAll($event)"
+                      class="noti-link fw-bold text-secondary text-decoration-none me-3">
+                      {{ "allRead" | translate }}
+                    </a>
+                    <a *ngIf="dataNoti.length > 0" (click)="confirmDelete($event)"
+                      class="noti-link fw-bold text-danger text-decoration-none">
+                      {{ "deleteAll" | translate }}
+                    </a>
+                  </div>
+                </div>
+                <ul class="list-unstyled px-3">
+                  <li *ngFor="let noti of dataNoti" class="mb-2">
+                    <hr />
+                    <a class="dropdown-item pointer" (click)="markIsRead(noti); openDetailModal(noti)"
+                      data-bs-toggle="modal" data-bs-target="#notificationDetail">
+                      <div>
+                        {{ noti.sendDate | date : "dd/MM/yyyy HH:mm น." }}
+                        <span *ngIf="noti.isRead === 0 && isNew(noti.sendDate)" class="badge bg-danger ms-2">{{ "new" |
+                          translate }}</span>
+                      </div>
+                      <div class="fs-6 text-truncate" [ngClass]="{
+                          'text-dark fw-bold': noti.isRead === 0,
+                          'text-muted': noti.isRead === 1
+                        }">
+                        <i *ngIf="noti.isRead === 1" class="fa-regular fa-envelope-open me-2"></i>
+                        <i *ngIf="noti.isRead === 0" class="fa-regular fa-envelope me-2"></i>
+                        {{
+                        getLanguages === "en"
+                        ? noti.notiMsgEn
+                        : noti.notiMsgTh
+                        }}
+                      </div>
+                    </a>
+                  </li>
+                  <li *ngIf="dataNoti.length === 0" class="text-center my-3">
+                    {{ "noNotifications" | translate }}
+                  </li>
+                </ul>
+              </div>
+            </ul>
+          </div>
+        </nav>
+      </div>
+      <!-- menu sidebar -->
+      <div class="d-flex align-items-center justify-content-end">
+        <nav class="navbar d-flex justify-content-end">
+          <div class="container-fluid d-flex justify-content-end p-0">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+              aria-controls="offcanvasNavbar">
+              <i class="fa-solid fa-bars text-dark menu-home"></i>
+            </button>
+            <div class="offcanvas offcanvas-end d-flex flex-column justify-content-between" tabindex="-1"
+              id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel"
+              style="background-color:#171717; max-height: 100vh; overflow-y: auto;">
+              <div>
+                <div class="offcanvas-header p-0 m-0 mt-1 pt-2 px-4">
+                  <h5 class="text-white ms-1">{{getDayName}}</h5>
+                  <button type="button" class="btn-close me-1" data-bs-dismiss="offcanvas" aria-label="Close"
+                    style="background-color: #ffffff;"></button>
+                </div>
+                <div class="p-4 py-2 m-0 mt-1">
+                  <div class="row m-0 p-4 editUserSidebar" style="background-color: #353535; border-radius: 20px;"
+                    (click)="onChangeEditProfile('INFO')" data-bs-toggle="modal" data-bs-target="#profileHeaderModal">
+                    <div class="d-flex justify-content-center col-4 p-0">
+                      <div class="rounded-circle p-2" style="background-color: #ffffff;">
+                        <img width="95px" height="95px" class="rounded-circle"
+                          [src]="profileData.image ? profileData.image : './takeLibro/icon_user.png'">
+                      </div>
+                    </div>
+                    <div class="col-8 d-flex flex-column justify-content-center p-0 m-0 text-white">
+                      <div class="px-4 h5 text-truncate">{{profileData?.firstName}} {{profileData?.lastName}}</div>
+                      <div class="px-3">
+                        <hr class="my-1" />
+                      </div>
+                      <div class="px-4">{{profileData?.email}}</div>
+                    </div>
+                  </div>
+                </div>
+                <hr style="border-color: #ffffff;" />
+                <div class="offcanvas-body flex-grow-0">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+
+                    <li class="nav-item">
+                      <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" class="nav-link"
+                        routerLink="/{{ projectPath }}/my-borrows-list">
+                        <div class="m-0 py-2 px-4 h5 menu-sm text-white">
+                          <i class="fa-solid fa-caret-left"></i> {{ 'myBorrowList' | translate}}
+                        </div>
+                      </a>
+                      <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" class="nav-link"
+                        routerLink="/{{ projectPath }}/my-history">
+                        <div class="m-0 py-2 px-4 h5 menu-sm text-white">
+                          <i class="fa-solid fa-caret-left"></i> {{ 'myBorrowHistory' | translate}}
+                        </div>
+                      </a>
+                    </li>
+
+                  </ul>
+                </div>
+                <hr style="border-color: #ffffff;" />
+                <div class="offcanvas-body flex-grow-0">
+                  <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item" *ngFor="let page of listPages">
+                      <a data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" class="nav-link"
+                        routerLink="/{{ projectPath }}{{page.path}}" *ngIf="auth.hasRole(page.role)">
+                        <div
+                          class="d-flex justify-content-between align-items-center m-0 py-2 px-4 h5 menu-sm text-white">
+                          <div class="w-75">
+                            <i class="fa-solid fa-caret-left"></i> {{ getNamePage(page.label) | translate }}
+                          </div>
+                          <div class="w-25 ps-5 d-flex justify-content-center">
+                            <i [className]="page.icon" [style.color]="page.iconColor"></i>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <hr style="border-color: #ffffff;" />
+              </div>
+              <div class="p-4">
+                <a routerLink="/login" (click)="clearToken()">
+                  <button class="btn w-100 text-white classBtn">
+                    <i class="fa-solid fa-arrow-right-from-bracket fa-xl me-2"></i> {{ 'logout' | translate }}
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Modal -->
+<div class="modal fade" id="notificationDetail" tabindex="-1" aria-labelledby="notificationDetailModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="notificationDetailModalLabel">
+          {{ "notificationDetails" | translate }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12 mb-3">
+            <strong class="text-uppercase">{{ "messageCode" | translate }}: </strong>
+            {{ selectedNoti?.notiCode }}
+          </div>
+          <div class="col-12 mb-3">
+            <strong class="text-uppercase">{{ "messageText" | translate }}: </strong>
+            {{
+            getLanguages === "en" ? selectedNoti?.notiMsgEn : selectedNoti?.notiMsgTh
+            }}
+          </div>
+          <div class="col-12 mb-3">
+            <strong class="text-uppercase">{{ "sentDate" | translate }}: </strong>
+            {{ selectedNoti?.sendDate | date : "dd/MM/yyyy HH:mm น." }}
+          </div>
+          <div class="col-12 mb-3">
+            <strong class="text-uppercase">{{ "readAt" | translate }}: </strong>
+            {{ selectedNoti?.openDate | date : "dd/MM/yyyy HH:mm น." }}
+          </div>
+          <div class="col-12 mb-3">
+            <strong class="text-uppercase">{{ "statusName" | translate }}: </strong>
+            <span class="badge" [ngClass]="{
+                'bg-danger': selectedNoti?.isRead === 0,
+                'bg-success': selectedNoti?.isRead === 1
+              }">
+              {{
+              selectedNoti?.isRead === 0
+              ? ("readAt" | translate)
+              : ("readStatus" | translate)
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {{ "close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="profileHeaderModal">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 600px">
+    <div class="modal-content">
+      <form [formGroup]="editForm" (ngSubmit)="onFormSubmit()">
+        <div class="modal-body p-0 m-0">
+          <!-- header -->
+          <div class="rounded-top p-2" style="height: 120px; background-color: #32373e">
+            <!-- prettier-ignore -->
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn-close invisible" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="mt-3 h5 text-white"> {{ 'profileDetail' | translate }} </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                style="filter: invert(1);"></button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+              <!-- prettier-ignore -->
+              <img
+                [class]="(editProfile === 'EDIT') ? 'object-fit-cover rounded-circle shadows-box user-image' : 'object-fit-cover rounded-circle shadows-box'"
+                [src]="editForm.get('image')?.value ? editForm.get('image')?.value : './takeLibro/icon_user.png'"
+                width="90px" height="90px" alt="icon user" (click)="(editProfile === 'EDIT') && fileInput.click()" />
+              <div *ngIf="editProfile === 'EDIT'" class="rounded-circle icon-font-image" (click)="fileInput.click()">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </div>
+              <input type="file" #fileInput (change)="onImageSelect($event)" style="display: none" />
+            </div>
+          </div>
+
+          <!-- content -->
+          <!-- prettier-ignore -->
+          <div class="p-4">
+            <div class="mt-1">
+              <div class="d-flex justify-content-end align-items-center">
+                <div class="d-flex">
+                  <div *ngIf="(editProfile === 'EDIT')">
+                    <span (click)="onChangeEditProfile('PWD')" class="editUserName me-2">
+                      <span><i class="fa-solid fa-key"></i></span>
+                    </span>
+                  </div>
+                  <div *ngIf="(editProfile === 'EDIT')">
+                    <!-- <span class="editUserName me-2"><span>บันทึก <i class="fa-solid fa-floppy-disk"></i></span></span> -->
+                    <span (click)="onChangeEditProfile('INFO')" class="editUserName">
+                      <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </span>
+                  </div>
+                  <div *ngIf="(editProfile === 'PWD')">
+                    <span (click)="onChangeEditProfile('EDIT')" class="editUserName">
+                      <span><i class="fa-solid fa-arrow-right"></i></span>
+                    </span>
+                  </div>
+                  <div *ngIf="(editProfile === 'INFO')">
+                    <span (click)="onChangeEditProfile('EDIT')" class="editUserName">
+                      <span><i class="fa-solid fa-pen-to-square"></i></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <hr class="mt-3" />
+            </div>
+            <div *ngIf="(editProfile === 'INFO')" class="row">
+              <!-- row 1 name -->
+              <div class="col-3 offset-3 mb-2">{{ 'nameSurname' | translate }}</div>
+              <div class="col-6 mb-2">{{ profileData?.firstName }} {{profileData?.lastName}}</div>
+
+              <!-- row 2 email -->
+              <div class="col-3 offset-3 mb-2">{{ 'email' | translate }}</div>
+              <div class="col-6 mb-2">{{ profileData?.email }}</div>
+
+              <!-- row 4 Rule Name -->
+              <div class="col-3 offset-3 mb-2">{{ 'position' | translate }}</div>
+              <div class="col-6 mb-2">{{ profileData?.role === 'R001' ? ('R001' | translate)
+                : profileData?.role === 'R002'
+                ? ('R002' | translate)
+                : profileData?.role === 'R003'
+                ? ('R003' | translate)
+                : 'none' }}</div>
+
+              <!-- row 5 Rule ID -->
+              <!-- <div class="col-6 mb-2">หมายเลขตำแหน่ง </div>
+            <div class="col-6 mb-2">{{ profileData?.role }}</div> -->
+
+            </div>
+            <div *ngIf="(editProfile === 'PWD')" class="row">
+              <!-- prettier-ignore -->
+              <form [formGroup]="passwordForm" (ngSubmit)="onFormSubmitPWD()">
+                <div class="row">
+                  <div class="col-12 mb-2 position-relative">
+                    <div class="form-group">
+                      <label class="text-nowrap" [ngClass]="{
+                      'text-danger': validFormReset('password') || passwordForm.get('password')?.errors?.['minlength']
+                    }">
+                        {{ "password" | translate }}
+                        {{ passwordForm.get('password')?.errors?.['minlength'] ? ('passwordMinLength' | translate) : ''
+                        }}
+                        {{ validFormReset("password") ? "*" : "" }}
+                      </label>
+                      <input id="password" type="{{ PWD1 ? 'text' : 'password' }}" formControlName="password"
+                        class="form-control px-3" [attr.placeholder]="'requiredPassword' | translate" />
+                      <span class="register-icon2" (click)="statusPWD('PWD1')">
+                        <i class="fa-solid" [ngClass]="{
+                        'fa-eye': PWD1,
+                        'fa-eye-slash': !PWD1,
+                        'text-secondary': true
+                      }"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-12 mb-2 position-relative">
+                    <div class="form-group">
+                      <!-- prettier-ignore -->
+                      <label class="text-nowrap"
+                        [ngClass]="{ 'text-danger': validFormReset('confirmPwd') || isPasswordMismatchOnReset() || passwordForm.get('confirmPwd')?.errors?.['minlength'] }">
+                        {{ "confirmPassword" | translate }}
+                        {{ passwordForm.get('confirmPwd')?.errors?.['minlength'] ? ('passwordMinLength' | translate) :
+                        isPasswordMismatchOnReset() ? ('passwordMismatch' | translate) : "" }}
+                        {{ validFormReset("confirmPwd") || isPasswordMismatchOnReset() ? "*" : "" }}
+                      </label>
+                      <input type="{{ PWD2 ? 'text' : 'password' }}" formControlName="confirmPwd"
+                        class="form-control login-input px-3" [attr.placeholder]="'requiredPassword' | translate" />
+                      <span class="register-icon2">
+                        <i class="{{
+                        PWD2
+                          ? 'fa-solid fa-eye text-secondary'
+                          : 'fa-solid fa-eye-slash text-secondary'
+                      }}" (click)="statusPWD('PWD2')"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="col-12 mb-2 position-relative">
+                    <button style="background-color: #58d68d" type="submit" class="btn w-100 h-100 text-white">
+                      <span>
+                        <i class="fa-solid fa-floppy-disk me-1"></i>
+                        {{ "save" | translate }}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            <div *ngIf="(editProfile === 'EDIT')" class="row">
+              <!-- prettier-ignore -->
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="firstName" [ngClass]="{ 'text-danger': validForm2('firstName') }">
+                    {{ 'firstName' | translate }} {{ validForm2("firstName") ? "*" : "" }}
+                  </label>
+                  <input id="firstName" type="text" formControlName="firstName" class="form-control login-input px-3"
+                    [attr.placeholder]="('requiredFirstName' | translate)" />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="lastName" [ngClass]="{ 'text-danger': validForm2('lastName') }">{{ 'lastName' | translate
+                    }} {{
+                    validForm2("lastName") ? "*" : "" }}</label>
+                  <input id="lastName" type="text" formControlName="lastName" class="form-control login-input px-3"
+                    [attr.placeholder]="('requiredLastName' | translate)" />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="email" [ngClass]="{ 'text-danger': validForm2('email') }">{{ 'email' | translate }}
+                    {{ editForm.get('email')?.errors?.['email'] ? '- ' + ('invalidEmail' | translate) : '' }}
+                    {{ validForm2("email") ? "*" : "" }}</label>
+                  <input id="email" type="email" formControlName="email" class="form-control login-input px-3"
+                    [attr.placeholder]="('requiredEmail' | translate)" />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-envelope text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="telephone" class="text-nowrap" [ngClass]="{ 'text-danger': validForm2('telephone') }">
+                    {{ 'phoneNumber' | translate }}
+                    {{ editForm.get('telephone')?.errors?.['pattern'] ? '- ' + ('invalidPhone' | translate) : '' }}
+                    {{ validForm2("telephone") ? "*" : "" }}
+                  </label>
+                  <input id="telephone" type="text" formControlName="telephone" class="form-control login-input px-3"
+                    [attr.placeholder]="('requiredPhone' | translate)" />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-phone text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label class="text-nowrap">{{ 'position' | translate }}</label>
+                  <input readonly type="text" formControlName="rule" class="form-control disble-form px-3"
+                    [attr.placeholder]="('position' | translate)" />
+                  <span class="editIcon">
+                    <i class="fa-solid fa-user-lock text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label class="text-nowrap"></label>
+                  <div>
+                    <button style="background-color: #58d68d" type="submit" class="btn w-100 h-100 text-white">
+                      <span>
+                        <i class="fa-solid fa-floppy-disk me-1"></i>{{ 'save' | translate }}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Crop -->
+<div class="modal fade" id="cropModal">
+  <div class="modal-dialog modal-dialog-centered" style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5)">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ "editImageSize" | translate }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModalCrop"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <image-cropper style="max-height: 500px" *ngIf="imageChangedEvent" [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true" [aspectRatio]="1 / 1" (imageCropped)="onCrop($event)"></image-cropper>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <app-button type="button" color="add" [text]="'save' | translate" icon="" (click)="onSetCrop()"></app-button>
+        <app-button data-bs-dismiss="modal" color="cancel" [text]="'cancel' | translate"></app-button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,348 @@
+.main-div {
+  // background-image: url(https://exciselab-uat.excise.go.th/excise-lab/login-bg.72a0dadf4bb0d1713e15.png);
+  overflow: hidden;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.main-col-height {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.centered-content-1 {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.centered-content-2 {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-circle {
+  display: block;
+  position: fixed;
+  background: #fff;
+  background-repeat: no-repeat;
+  background-position: 0 bottom;
+  background-attachment: fixed;
+  background-size: 35%;
+  width: 50%;
+  height: 150%;
+  top: -25%;
+  left: 0;
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  box-shadow: 1px 14px 10px 0 rgba(0, 0, 0, 0.15);
+  z-index: 0;
+}
+
+.login-form {
+  padding: 20px;
+  width: 350px;
+  z-index: 1;
+  transform: translateY(20px);
+}
+
+.register-form {
+  padding: 20px;
+  width: 600px;
+  z-index: 1;
+  margin: auto;
+  transform: translateY(20px);
+}
+
+.register-form-mobile {
+  padding: 20px;
+  width: auto;
+  z-index: 1;
+  margin: auto;
+  transform: translateY(20px);
+}
+
+.font-required {
+  margin-top: -5px;
+  margin-bottom: 5px;
+  margin-left: 15px;
+  font-size: 12px;
+}
+
+.login-input {
+  border-radius: 20px;
+  border-color: #6a9c89;
+}
+
+.login-input {
+  &::placeholder {
+    color: #9e9e9e;
+    opacity: 1;
+  }
+}
+
+.login-btn {
+  background-color: #6a9c89; // old 4f75ff // star 48b1d8
+  color: white;
+  width: 80%;
+  border-radius: 20px;
+}
+
+.login-info {
+  color: #16423c;
+  cursor: pointer;
+}
+
+.login-info:hover {
+  text-decoration: underline;
+  text-decoration-color: #c4dad2;
+  text-decoration-thickness: 2px;
+}
+
+.icon-css {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 12px;
+}
+
+.login-icon1 {
+  @extend .icon-css;
+  right: 14px;
+}
+
+.login-icon2 {
+  @extend .icon-css;
+  cursor: pointer;
+}
+
+.register-icon1 {
+  @extend .icon-css;
+  top: 70%;
+  right: 24px;
+}
+
+.register-icon2 {
+  @extend .icon-css;
+  cursor: pointer;
+  top: 70%;
+  right: 24px;
+}
+
+.text-shadows {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+// ----------------
+@keyframes moveRight {
+  from {
+    left: 0;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  to {
+    left: 50%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+}
+
+@keyframes moveLeft {
+  from {
+    left: 50%;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+  }
+  to {
+    left: 0;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
+
+@keyframes moveFormUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes moveFormDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.move-right {
+  animation: moveRight 1s forwards;
+}
+
+.move-left {
+  animation: moveLeft 1s forwards;
+}
+
+.fade-in-up {
+  animation: moveFormUp 1.5s forwards;
+}
+
+.fade-out-down {
+  animation: moveFormDown 0.5s forwards;
+}
+
+@keyframes logoPageRight {
+  from {
+    opacity: 1;
+    top: 50%;
+  }
+  to {
+    opacity: 0;
+    top: 40%;
+  }
+}
+
+@keyframes logoPageLeft {
+  from {
+    opacity: 0;
+    top: 40%;
+  }
+  to {
+    opacity: 1;
+    top: 50%;
+  }
+}
+
+.logo-page-right {
+  animation: logoPageRight 0.5s forwards;
+}
+
+.logo-page-left {
+  animation: logoPageLeft 0.5s forwards;
+}
+
+// ---------------------------------------------------------------
+
+// .login-contact {
+// margin-top: auto;
+// text-align: center;
+// padding: 20px;
+// z-index: 1;
+// font-size: 10px;
+// position: relative; // Required for the transform property to work properly
+// }
+
+// @keyframes textContactUp {
+//   from {
+//     opacity: 1;
+//     transform: translateY(0); // Start from original position
+//   }
+//   to {
+//     opacity: 0;
+//     transform: translateY(60%); // Move up by 10% of its height
+//   }
+// }
+
+// @keyframes textContactDown {
+//   from {
+//     opacity: 0;
+//     transform: translateY(100%); // Start from 10% below its original position
+//   }
+//   to {
+//     opacity: 1;
+//     transform: translateY(0); // Move to original position
+//   }
+// }
+
+// .text-contact-up {
+//   animation: textContactUp 0.5s forwards;
+// }
+
+// .text-contact-down {
+//   animation: textContactDown 0.5s forwards;
+// }
+
+.shadows-box {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.user-image {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.icon-font-image {
+  position: absolute;
+  bottom: 4.6%; //  min 4.6%   max  2.7%
+  right: 39.2%; // min 39.2%  max  38.76%
+  background-color: #16423c89;
+  color: #dfe8ed;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: bottom 0.3s ease, right 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.user-image:hover {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.user-image:hover + .icon-font-image {
+  bottom: 2.9%;
+  right: 38.8%;
+  transform: scale(1.05);
+  transition: bottom 0.3s ease, right 0.3s ease, transform 0.3s ease;
+}
+
+.icon-font-image:hover {
+  bottom: 4.6%;
+  right: 39.2%;
+  transform: scale(1);
+  transition: bottom 0.3s ease, right 0.3s ease, transform 0.3s ease;
+}
+
+::ng-deep .ngx-ic-cropper {
+  color: #ff0000 !important;
+  outline: var(--cropper-outline-color, rgba(255, 255, 255, 0.6)) solid 100vw !important;
+}

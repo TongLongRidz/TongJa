@@ -1,0 +1,42 @@
+.pointer {
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.page-link:hover {
+  background-color: #e6e6e6;
+}
+
+.active-page a {
+  background-color: #6a9c89;
+  color: white;
+}
+
+%page-link {
+  border: none;
+  background-color: white;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+}
+
+.page-link {
+  @extend %page-link;
+}
+
+.page-side {
+  width: auto;
+}
+
+.text-disable {
+  color: #cacaca;
+}

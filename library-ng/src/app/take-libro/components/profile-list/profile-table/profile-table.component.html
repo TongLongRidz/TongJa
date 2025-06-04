@@ -1,0 +1,135 @@
+<div class="table-responsive rounded">
+  <table class="table table-striped p-0 m-0">
+    <thead>
+      <tr style="height: 55px">
+        <th scope="col" style="width: 5%" class="text-center align-middle tbc">
+          <i
+            [ngClass]="{
+              'fa-arrow-up-wide-short': !statusSort,
+              'fa-arrow-down-short-wide': statusSort
+            }"
+            class="fa-solid"
+            (click)="proComp.sortTable()"
+            style="cursor: pointer"
+          ></i>
+        </th>
+        <th scope="col" style="width: 8%" class="text-truncate align-middle tbc">
+          {{ "profile" | translate }}
+        </th>
+        <th scope="col" style="width: 8%" class="text-truncate align-middle tbc">
+          {{ "idUser" | translate }}
+        </th>
+        <th scope="col" class="text-truncate align-middle tbc" style="width: 23%">
+          {{ "nameSurname" | translate }}
+          <i *ngIf="nameSort === 'max'" class="fa-solid fa-arrow-down-a-z"></i>
+          <i *ngIf="nameSort === 'min'" class="fa-solid fa-arrow-up-z-a"></i>
+        </th>
+        <th scope="col" style="width: 15%" class="text-truncate align-middle tbc">
+          {{ "email" | translate }}
+        </th>
+        <th
+          scope="col"
+          style="width: 8%"
+          class="text-truncate text-center align-middle tbc"
+        >
+          {{ "position" | translate }}
+        </th>
+        <th
+          scope="col"
+          style="width: 10%"
+          class="text-truncate text-center align-middle tbc"
+        >
+          {{ "phoneNumber" | translate }}
+        </th>
+        <th scope="col" style="width: 10%" class="text-truncate align-middle tbc">
+          {{ "creationTime" | translate }}
+        </th>
+        <th
+          scope="col"
+          style="width: 13%"
+          class="text-center text-truncate align-middle tbc"
+        >
+          {{ "manage" | translate }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!loadingTable" class="text-center">
+      <tr *ngIf="profileTable.length === 0">
+        <td colspan="9" style="text-align: center; font-size: 16px; color: #808080">
+          <p style="padding-top: 20px">
+            <app-not-found></app-not-found>
+          </p>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody>
+      <tr *ngFor="let user of profileTable; let i = index">
+        <td class="align-middle text-center">
+          {{ i + 1 + (pageCurrent - 1) * pageSize }}
+        </td>
+        <td class="align-middle text-truncate">
+          <img
+            class="rounded-circle object-fit-cover"
+            [src]="user.image ? user.image : './takeLibro/icon_user.png'"
+            height="35px"
+            width="35px"
+          />
+        </td>
+        <td class="align-middle text-truncate">{{ user.profileCode }}</td>
+        <td class="align-middle text-truncate">
+          {{ user.firstName }} {{ user.lastName }}
+        </td>
+        <td class="align-middle text-truncate">
+          {{ user.email }}
+        </td>
+        <td class="align-middle text-center text-truncate">
+          {{ user.role | translate }}
+        </td>
+        <td class="align-middle text-truncate text-center">
+          {{ user.telephone ? user.telephone : "-" }}
+        </td>
+        <td class="align-middle text-truncate">
+          {{ forDate(user.createAt, Language) }}
+        </td>
+        <td class="align-middle">
+          <div class="d-flex justify-content-center">
+            <div
+              class="d-flex justify-content-around"
+              style="min-width: 150px; max-width: 170px"
+            >
+              <!-- (click)="editBorrowBook(user.id)" -->
+              <app-button
+                icon="fa-solid fa-pen-to-square"
+                ruleStyle="TABLE"
+                color="edit"
+                class="mx-1 mx-lg-0"
+                (click)="getUserById(user.id)"
+              />
+
+              <app-button
+                (click)="isChangeStatusProfile(user.id !== 0 ? user.id : null)"
+                icon="fa-solid fa-trash"
+                ruleStyle="TABLE"
+                color="delete"
+                class="mx-1 mx-lg-0"
+                color="delete"
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<table class="table m-0">
+  <tr
+    *ngFor="let _ of [].constructor(pageSize - profileTable.length); let index = index"
+    style="height: 53px"
+  >
+    <td></td>
+  </tr>
+</table>
+
+<app-spinner *ngIf="loadingTable"></app-spinner>

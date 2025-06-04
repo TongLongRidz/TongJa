@@ -1,0 +1,132 @@
+<div class="table-responsive rounded">
+  <table class="table table-striped p-0 m-0">
+    <thead>
+      <tr style="height: 55px">
+        <th scope="col" style="width: 5%" class="text-center align-middle tbc">
+          <i
+            [ngClass]="{
+              'fa-arrow-up-wide-short': !statusSort,
+              'fa-arrow-down-short-wide': statusSort
+            }"
+            class="fa-solid"
+            (click)="bookC.sortTable()"
+            style="cursor: pointer"
+          ></i>
+        </th>
+        <th
+          scope="col"
+          style="width: 10%"
+          class="align-middle text-center text-truncate tbc"
+        >
+          {{ "codeBook" | translate }}
+        </th>
+        <th
+          scope="col"
+          style="width: 70%; cursor: pointer"
+          class="text-truncate align-middle tbc"
+          (click)="bookC.sortNameFunc()"
+        >
+          {{ "nameBook" | translate }}
+          <i *ngIf="nameSort === 'max'" class="fa-solid fa-arrow-down-a-z"></i>
+          <i *ngIf="nameSort === 'min'" class="fa-solid fa-arrow-up-z-a"></i>
+        </th>
+        <th
+          scope="col"
+          style="width: 2%"
+          class="text-center text-truncate align-middle tbc"
+        >
+          {{ "statusName" | translate }}
+        </th>
+        <th
+          scope="col"
+          style="width: 13%"
+          class="text-center text-truncate align-middle tbc"
+        >
+          {{ "manage" | translate }}
+        </th>
+      </tr>
+    </thead>
+
+    <tbody *ngIf="!loadingTable" class="text-center">
+      <tr *ngIf="bookTable.length === 0">
+        <td
+          colspan="5"
+          style="text-align: center; font-size: 16px; color: #808080"
+        >
+          <p style="padding-top: 20px">
+            <app-not-found></app-not-found>
+          </p>
+        </td>
+      </tr>
+    </tbody>
+
+    <tbody>
+      <tr *ngFor="let book of bookTable; let i = index">
+        <td class="align-middle text-center">
+          {{ i + 1 + (pageCurrent - 1) * pageSize }}
+        </td>
+        <td class="align-middle text-center">{{ book.bookCode }}</td>
+        <td class="align-middle text-truncate">
+          {{ Language === "th" ? book.bookNameTh : book.bookNameEn }}
+        </td>
+        <td class="align-middle text-center">
+          <div class="d-flex justify-content-center">
+            <div
+              class="status-icon-center"
+              [style.background-color]="
+                book.bookStatus === 0 ? '#5ddd1d' : '#FF3333'
+              "
+            >
+              <span
+                class="status-icon-border"
+                [style.background-color]="
+                  book.bookStatus === 0 ? '#5ddd1d' : '#FF3333'
+                "
+              ></span>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex justify-content-center">
+            <div
+              class="d-flex justify-content-around"
+              style="min-width: 150px; max-width: 170px"
+            >
+              <app-button
+                (click)="editBook(book.id)"
+                icon="fa-solid fa-pen-to-square"
+                ruleStyle="TABLE"
+                color="edit"
+                class="mx-1 mx-lg-0"
+              ></app-button>
+
+              <app-button
+                (click)="
+                  isChangeStatusBook(book.bookStatus === 0 ? book.id : null)
+                "
+                class="mx-1 mx-lg-0"
+                icon="fa-solid fa-trash"
+                ruleStyle="TABLE"
+                [disabled]="book.bookStatus != 0 ? true : false"
+                [color]="book.bookStatus === 0 ? 'delete' : 'disabled'"
+              ></app-button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<table class="table m-0">
+  <tr
+    *ngFor="
+      let _ of [].constructor(pageSize - bookTable.length);
+      let index = index
+    "
+    style="height: 53px"
+  >
+    <td></td>
+  </tr>
+</table>
+
+<app-spinner *ngIf="loadingTable"></app-spinner>

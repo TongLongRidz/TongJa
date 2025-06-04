@@ -1,0 +1,263 @@
+.border-img {
+  // border: 3px solid rgb(82, 82, 82);
+  // border-radius: 5px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.book-image:hover {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.book-image {
+  width: 280px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  /* For screens larger than 'sm' (small) breakpoint */
+  .book-image {
+    width: 320px;
+  }
+}
+
+@media (min-width: 992px) {
+  /* For screens larger than 'lg' (large) breakpoint */
+  .book-image {
+    width: 100%;
+  }
+}
+
+.book-detail-label {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.book-detail-value {
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.bg_book {
+  background-image: url("/takeLibro/bg_book.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 65%;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+@media (max-width: 770px) {
+  .bg_book {
+    width: 65%; // (sm)
+  }
+}
+
+@media (min-width: 771px) and (max-width: 992px) {
+  .bg_book {
+    width: 40%; // (md)
+  }
+}
+
+@media (min-width: 993px) {
+  .bg_book {
+    width: 65%; // (lg)
+  }
+}
+
+.showTable {
+  cursor: pointer;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.showTable:hover {
+  text-decoration: underline;
+  color: rgb(123, 106, 255);
+}
+
+// book scroll
+.horizontal-scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.card {
+  display: inline-block;
+  width: 15rem;
+  margin: 1rem;
+}
+
+.modal-book-image {
+  width: 150px;
+  height: auto;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 3px solid rgb(187, 187, 187);
+  border-radius: 8px;
+}
+
+// ---------- border rgb -----------
+
+// .border-box-rgb:hover:before,
+// .border-box-rgb:hover:after {
+//   content: "";
+//   position: absolute;
+//   left: -5px;
+//   top: -5px;
+//   background: linear-gradient(
+//     45deg,
+//     #0091ff,
+//     #00ffd0,
+//     #00ff00,
+//     #ffff00,
+//     #b300ff,
+//     #0000ff,
+//     #00ffd0,
+//     #00ff00,
+//     #00ff00,
+//     #0091ff
+//   );
+//   background-size: 400%;
+//   width: calc(100% + 10px);
+//   height: calc(100% + 10px);
+//   z-index: -5;
+//   animation: steam 20s linear infinite;
+//   border-radius: 5px;
+// }
+
+// @keyframes steam {
+//   0% {
+//     background-position: 0 0;
+//   }
+//   50% {
+//     background-position: 400% 0;
+//   }
+//   100% {
+//     background-position: 0 0;
+//   }
+// }
+
+// .border-box-rgb:after {
+//   filter: blur(50px);
+// }
+
+// ---------- border rgb end -----------
+
+.comment-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.comment-item {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.box-comments {
+  background: #ffffff;
+  padding: 15px;
+  border-radius: 25px;
+  word-break: break-word;
+  width: fit-content;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.text-end {
+  margin-top: 5px;
+  color: #707070;
+  font-size: 0.85rem;
+}
+
+.container,
+.container-fluid,
+.container-xxl,
+.container-xl,
+.container-lg,
+.container-md,
+.container-sm {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (min-width: 576px) {
+  .container-sm,
+  .container-ao {
+    max-width: 540px;
+  }
+}
+@media (min-width: 768px) {
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: 960px;
+  }
+}
+@media (min-width: 1600px) {
+  .container-xl,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: 1040px;
+  }
+}
+@media (min-width: 1800px) {
+  .container-xxl,
+  .container-xl,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container {
+    max-width: 1040px;
+  }
+}
+
+.icon-search {
+  position: absolute;
+  right: 17px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+::ng-deep .cpnen-book-spinner1 img {
+  max-height: 200px;
+  min-height: 150px;
+}
+
+::ng-deep .cpnen-book-spinner2 img {
+  height: 265px;
+  width: 100%;
+  object-fit: cover;
+}

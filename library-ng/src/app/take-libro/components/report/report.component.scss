@@ -1,0 +1,139 @@
+
+
+.box {
+    height: 400px;
+}
+
+
+.color1{
+    background: rgb(255, 69, 96);
+    color: white;
+    border: none ;
+}
+.color2{
+    background: rgb(0, 143, 251);
+    color: white;
+    border: none;
+}
+.color3{
+    background: rgb(0, 227, 150);
+    color: white;
+    border: none;
+}
+.color4{
+    background: rgb(254, 176, 25);
+    color: white;
+    border: none;
+}
+
+
+.color5{
+    background: rgb(255, 127, 58);
+    color: white;
+    border: none;
+}
+.color6{
+    background: rgb(51, 198, 251);
+    color: white;
+    border: none;
+}
+.color7{
+    background: rgb(247, 207, 45);
+    color: white;
+    border: none;
+}
+
+
+// .card {
+//     border: none; 
+// }
+
+.border-none{
+    border: none; 
+}
+
+
+.rounded-lefts {
+    border-top-left-radius: 10px;  
+    border-bottom-left-radius: 10px;
+}
+
+.rounded-rights {
+    border-top-right-radius: 10px;  
+    border-bottom-right-radius: 10px;
+}
+
+app-not-found {
+    text-align: center; 
+}
+
+
+.date-divider {
+    position: absolute;
+    background-color: #007bff; 
+    height: 2px; 
+    top: 50%; 
+    z-index: 1; 
+}
+
+
+
+.nav-pills .nav-link {
+    background-color: #faf9f9; /* สีพื้นหลังของปุ่ม */
+    margin-bottom: 5px; /* ระยะห่างระหว่างปุ่ม */
+    border-radius: 5px; /* มุมโค้ง */
+}
+
+.nav-pills .nav-link.active {
+    background-color: #007bff; 
+    color: #fff !important; 
+}
+
+.nav-pills .nav-link:hover {
+    // background-color: #e2e6ea; /* สีพื้นหลังเมื่อ hover */
+    color: #007bff; /* สีตัวอักษรเมื่อ hover */
+}
+
+
+// test
+
+
+.trophy {
+    position: relative;
+    display: inline-block;
+    animation: shimmer 2s infinite;
+  }
+  
+  .gold {
+    color: #FFD700;
+  }
+  
+  .silver {
+    color: #C0C0C0;
+  }
+  
+  .bronze {
+    color: #CD7F32;
+  }
+  
+  @keyframes shimmer {
+    0% {
+      text-shadow: 
+        0 0 5px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 15px rgba(255, 255, 255, 0.4);
+    }
+    50% {
+      text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 30px rgba(255, 255, 255, 0.6),
+        0 0 40px rgba(255, 255, 255, 0.4);
+    }
+    100% {
+      text-shadow: 
+        0 0 5px rgba(255, 255, 255, 0.8),
+        0 0 10px rgba(255, 255, 255, 0.6),
+        0 0 15px rgba(255, 255, 255, 0.4);
+    }
+  }
+  

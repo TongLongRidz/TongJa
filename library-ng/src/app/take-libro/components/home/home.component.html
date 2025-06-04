@@ -1,0 +1,316 @@
+<div class="container mt-5 mb-5 bg-container p-4 mb-4 rounded">
+  <form [formGroup]="selectFormList" class="">
+    <div class="row gx-2 gy-3 select-actions">
+      <div class="d-flex flex-wrap justify-content-between align-items-end gap-3">
+        <!-- Group for Select Category, Select Status, and Reset -->
+        <div class="d-flex gap-3 flex-grow-1">
+          <!-- Select Category -->
+          <div class="d-flex flex-column">
+            <label class="text-white mb-2">{{ "category" | translate }}</label>
+            <app-dropdown
+              class="mt-2"
+              name="categoryCode"
+              ngDefaultControl
+              [formControl]="categoryCodeControl"
+              [placeholder]="'select_category' | translate"
+              [options]="dropdownOptions"
+              (selectionChange)="onSelectionChange($event)"
+            ></app-dropdown>
+          </div>
+
+          <!-- Select Status -->
+          <div class="d-flex flex-column">
+            <label class="text-white mb-2">{{ "statusName" | translate }}</label>
+            <app-dropdown
+              class="mt-2"
+              name="status"
+              ngDefaultControl
+              [formControl]="statusControl"
+              [placeholder]="'selectStatus' | translate"
+              [options]="statusOptions"
+              [ngModel]="selectFormList.get('status')?.value"
+              (selectionChange)="onSelectionStatusChange($event)"
+            ></app-dropdown>
+          </div>
+
+          <!-- Reset Button -->
+          <div class="d-flex align-items-end">
+            <app-button
+              (click)="resetForm()"
+              icon="fa-solid fa-arrow-rotate-right"
+              color="reset"
+            ></app-button>
+          </div>
+        </div>
+
+        <!-- Navigate Button -->
+        <div
+          class="d-flex justify-content-end align-items-end"
+          *ngIf="authService.hasRole(['R001', 'R003'])"
+        >
+          <app-button
+            class="navigate"
+            (click)="navigate()"
+            icon="search"
+            [text]="'manageBookList' | translate"
+            color="styb2"
+            width="100%"
+          ></app-button>
+        </div>
+      </div>
+
+      <div class="row mt-3">
+        <div
+          *ngIf="!loadingTable && dataFormlist.length === 0"
+          class="loading-container text-center mt-5"
+        >
+          <app-not-found class="text-white"></app-not-found>
+        </div>
+        <div
+          class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1 book-card mt-2"
+          *ngFor="let book of dataFormlist; let i = index"
+        >
+          <div class="card card-hover card-container fixed-size-card">
+            <div class="card-body card-list">
+              <img
+                (click)="bookDetail(book.id)"
+                [src]="
+                  book.bookImage
+                    ? book.bookImage
+                    : 'https://www.islamspk.com/committee/no-pict.png'
+                "
+                class="object-fit-contain border-0 rounded card-img-top pointer zoom-in"
+                alt="Book Image"
+              />
+              <div class="row">
+                <div class="col-12">
+                  <span
+                    class="text-truncate-2 text-name text-start"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    title="{{
+                      getLanguages === 'en' ? book.bookNameEn : book.bookNameTh
+                    }}"
+                  >
+                    {{ getLanguages === "en" ? book.bookNameEn : book.bookNameTh }}
+                  </span>
+                </div>
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-6">
+                      <span class="text-cate text-start text-truncate">
+                        {{ book.categoryName }}
+                      </span>
+                    </div>
+                    <div class="col-6 text-end text-cate">
+                      <div class="d-flex justify-content-end align-items-center">
+                        <div class="d-flex align-items-center me-2">
+                          <i
+                            class="fa-solid fa-book-bookmark fa-xs text-primary me-1"
+                          ></i>
+                          <span>{{ book.borrowCount ?? 0 }}</span>
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <i class="fa-solid fa-eye text-success me-1"></i>
+                          <span>{{ book.viewCount ?? 0 }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-9">
+                    <app-button
+                      class="custom-margin"
+                      (click)="openModal(book)"
+                      color="borrow2"
+                      [text]="'borrowBook' | translate"
+                      *ngIf="book.bookStatus === 0"
+                      data-bs-toggle="modal"
+                      data-bs-target="#borrowModal"
+                      width="100%"
+                    >
+                    </app-button>
+                    <app-button
+                      *ngIf="book.bookStatus === 1"
+                      [disabled]="true"
+                      color="disabled"
+                      [text]="'currentlyReading' | translate"
+                      class="not-allowed"
+                      width="100%"
+                    >
+                    </app-button>
+                  </div>
+                  <div class="col-3 mt-1">
+                    <button
+                      class="btn btn-no-border text-end"
+                      [ngClass]="{
+                        'text-danger': isFavorite(book.bookCode),
+                        'text-muted': !isFavorite(book.bookCode)
+                      }"
+                      (click)="toggleFavorite(book.bookCode)"
+                    >
+                      <i
+                        [class]="
+                          isFavorite(book.bookCode)
+                            ? 'fa-solid fa-heart'
+                            : 'fa-regular fa-heart'
+                        "
+                      >
+                      </i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="d-flex justify-content-center mt-3 mb-3">
+    <app-pagination
+      [totalPages]="totalPages"
+      [pageCurrent]="page"
+      (pageChange)="onPageChange($event)"
+    ></app-pagination>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="borrowModal"
+  tabindex="-1"
+  aria-labelledby="borrowModalLabel"
+  role="dialog"
+>
+  <form [formGroup]="borrowForm" (ngSubmit)="onSubmit()">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            (click)="closeModal()"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center mb-3">
+            <img
+              [src]="
+                selectedBook?.bookImage
+                  ? selectedBook.bookImage
+                  : 'https://www.islamspk.com/committee/no-pict.png'
+              "
+              class="modal-book-image card-img-top"
+            />
+            <div class="ms-3">
+              <div class="mb-2">
+                <label class="form-label fw-bold">{{ "nameBook" | translate }}:</label>
+                <p>
+                  {{
+                    getLanguages === "en"
+                      ? selectedBook?.bookNameEn
+                      : selectedBook?.bookNameTh
+                  }}
+                </p>
+              </div>
+              <div class="mb-2">
+                <label class="form-label fw-bold">{{ "codeBook" | translate }}:</label>
+                <p>{{ selectedBook?.bookCode }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="profileName" class="form-label fw-bold">{{
+              "borrowerName" | translate
+            }}</label>
+            <input
+              [value]="profileName"
+              name="profileName"
+              type="text"
+              class="form-control"
+              id="profileName"
+              placeholder="กรอกชื่อผู้ยืม"
+              readonly
+            />
+            <!-- <div *ngIf="
+                profileName?.hasError('required') && profileName?.touched
+              " class="text-danger">
+              *กรุณากรอกชื่อผู้ยืม
+            </div>
+            <div *ngIf="borrowForm.get('profileName')?.hasError('pattern') && borrowForm.get('profileName')?.touched"
+              class="text-danger">
+              ชื่อผู้ยืมห้ามเป็นช่องว่าง
+            </div> -->
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <label for="borrowStart" class="form-label fw-bold">{{
+                "borrowingDate" | translate
+              }}</label>
+              <app-datepicker-th
+                ngDefaultControl
+                [minDate]="minStartFunc()"
+                [language]="getLanguages"
+                [placeholder]="'dateFormat' | translate"
+                [maxDate]="MaxStartFunc()"
+                dateType="TH"
+                [bsValue]="borrowStart?.value"
+                (value)="borrowForm.get('borrowStart')?.setValue($event)"
+                id="borrowStart"
+                formControlName="borrowStart"
+              ></app-datepicker-th>
+              <div
+                *ngIf="
+                  borrowForm.get('borrowStart')?.hasError('required') &&
+                  borrowForm.get('borrowStart')?.touched
+                "
+                class="text-danger"
+              >
+                กรุณาเลือกวันที่ยืม
+              </div>
+            </div>
+            <div class="col-6">
+              <label for="returnDate" class="form-label fw-bold"
+                >{{ "returnDate" | translate }}
+              </label>
+              <app-datepicker-th
+                ngDefaultControl
+                [minDate]="minEndFunc()"
+                [language]="getLanguages"
+                dateType="TH"
+                [bsValue]="borrowEnd?.value"
+                [placeholder]="'dateFormat' | translate"
+                (value)="borrowForm.get('borrowEnd')?.setValue($event)"
+                id="borrowEnd"
+                formControlName="borrowEnd"
+              ></app-datepicker-th>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 justify-content-center">
+          <app-button
+            (click)="closeModal()"
+            [text]="'cancel' | translate"
+            color="cancel"
+            id="closeModalButton"
+            data-bs-dismiss="modal"
+          ></app-button>
+
+          <app-button
+            type="submit"
+            [text]="'ok' | translate"
+            color="borrow0"
+          ></app-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<app-spinner *ngIf="loadingTable"></app-spinner>

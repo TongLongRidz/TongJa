@@ -1,0 +1,33 @@
+<div class="input-group rounded" [style.background-color]="dateBgColor">
+  <div class="me-1"></div>
+  <input
+    type="text"
+    class="form-control sr-only custom-animation"
+    #dp="bsDatepicker"
+    [minDate]="minDate"
+    [maxDate]="maxDate"
+    (bsValueChange)="onValueChange($event)"
+    bsDatepicker
+    [bsValue]="bsValue"
+    [style.background-color]="dateBgColor"
+    placement="top"
+  />
+  <input
+    disabled
+    type="text"
+    [placeholder]="placeholder"
+    class="form-control"
+    [value]="BsValueType"
+    [style.background-color]="dateBgColor"
+  />
+  <button
+    class="btn btn-outline-secondary"
+    (click)="dp.toggle()"
+    type="button"
+    id="btndate"
+    [disabled]="disabled"
+    [style.background-color]="dateBgColor"
+  >
+    <i class="fa-solid fa-calendar-days icon"></i>
+  </button>
+</div>

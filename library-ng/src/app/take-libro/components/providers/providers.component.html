@@ -1,0 +1,18 @@
+<section>
+    <div class="card blue">
+        <div class="header">
+            <span class="close" (click)="resetProgress()">✕</span>
+        </div>
+        <h3>Uploading...</h3>
+        <div class="progress-info d-flex justify-content-between">
+            <span class="text-light">Progress</span>
+            <span class="text-light">{{ progress }}%</span>
+        </div>
+        <div class="progress">
+            <div class="progress-bar" [style.width.%]="progress"></div>
+        </div>
+        <div class="buttons">
+            <a href="#" (click)="resetProgress($event)">loading</a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,24 @@
+services:
+  libro-api-office:
+    restart: always
+    container_name: libro-api-office
+    image: libro-api-office:${TAG}
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        TAG: ${TAG}
+    environment:
+      - TZ=Asia/Bangkok
+      - SPRING_PROFILES_ACTIVE=office
+    ports:
+      - "8086:8080"
+    volumes:
+      - /usr/local/share/libro/logs:/root/Projects/libro-api/logs
+      - /usr/local/share/libro/files:/root/Projects/files
+    networks:
+      - network-libro
+
+networks:
+  network-libro:
+    driver: bridge

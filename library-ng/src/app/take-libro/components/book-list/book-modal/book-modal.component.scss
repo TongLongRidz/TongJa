@@ -1,0 +1,19 @@
+.book-image:hover {
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+}
+
+.book-image {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+::ng-deep .ngx-ic-cropper {
+  color: #ff0000 !important;
+  outline: var(--cropper-outline-color, rgba(255, 255, 255, 0.6)) solid 100vw !important;
+}

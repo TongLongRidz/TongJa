@@ -1,0 +1,535 @@
+<!-- prettier-ignore -->
+<main
+  class="main-div"
+  style="
+    background: linear-gradient(
+      165deg,
+      rgba(196, 218, 210, 0.7) 24%,
+      rgba(106, 156, 137, 0.7) 58%,
+      rgba(22, 66, 60, 0.7) 100%
+    );
+  "
+>
+  <div class="p-0 m-0 d-none d-lg-block">
+    <div class="row">
+      <div class="col-md-6 main-col-height">
+        <div [ngClass]="{
+            'login-circle': true,
+            'move-right': animateCircle,
+            'move-left': !animateCircle
+          }"></div>
+        <div class="centered-content-1 text-center" [ngClass]="{
+            'logo-page-right': animateCircle,
+            'logo-page-left': !animateCircle
+          }">
+          <img class="mb-3 text-shadows" src="./takeLibro/icon-book.png" width="130px" />
+          <div class="h1 text-white text-shadows">ยินดีต้อนรับ</div>
+          <div class="h1 text-white text-shadows">ระบบยืมหนังสือ</div>
+        </div>
+        <div class="login-form" [ngClass]="{
+            'fade-in-up': !animateCircle,
+            'fade-out-down': animateCircle
+          }">
+          <div class="d-flex justify-content-center">
+            <img src="./takeLibro/icon_user.png" alt="icon user" />
+          </div>
+          <span class="d-block mt-3 text-center h5">เข้าสู่ระบบ</span>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+            <div class="form-group mt-3 mb-2 position-relative">
+              <input id="email" type="email" [(ngModel)]="loginForm.value.email" formControlName="email" class="form-control login-input px-4"
+                placeholder="Email" />
+              <span class="login-icon1">
+                <i class="fa-solid fa-user text-secondary"></i>
+              </span>
+            </div>
+            <!-- prettier-ignore -->
+            <div *ngIf="validForm1('email')" class="text-danger font-required">
+              <div *ngIf="loginForm.get('email')?.errors?.['required']">กรุณากรอก - อีเมล *</div>
+              <div *ngIf="loginForm.get('email')?.errors?.['email']">ที่อยู่อีเมลไม่ถูกต้อง *</div>
+            </div>
+            <div class="form-group mb-2 position-relative">
+              <input id="password" type="{{ vPWD1 ? 'text' : 'password' }}" formControlName="password"
+                class="form-control login-input px-4" [(ngModel)]="loginForm.value.password" placeholder="Password" />
+              <span class="login-icon2" (click)="statusPWD1()">
+                <i class="{{
+                    vPWD1
+                      ? 'fa-solid fa-eye text-secondary'
+                      : 'fa-solid fa-eye-slash text-secondary'
+                  }}"></i>
+              </span>
+            </div>
+            <!-- prettier-ignore -->
+            <div *ngIf="validForm1('password')" class="text-danger font-required">
+              <div *ngIf="loginForm.get('password')?.errors?.['required']">กรุณากรอก - รหัสผ่าน *</div>
+              <div *ngIf="loginForm.get('password')?.errors?.['minlength']">รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร *
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn login-btn">เข้าสู่ระบบ</button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+              <span class="login-info" (click)="toggleAnimation()">สร้างบัญชี</span>
+              <span style="color: #16423C">&nbsp; / &nbsp;</span>
+              <span class="login-info" (click)="openDocManual()">คู่มือการใช้งาน</span>
+            </div>
+          </form>
+        </div>
+        <!-- <div class="login-contact" [ngClass]="{
+            'text-contact-up': animateCircle,
+            'text-contact-down': !animateCircle
+          }">
+          จัดทำเเละพัฒนาโดย กลุ่มวิเคราะห์สินค้าเเละของกลาง Version: 1.18.0
+          Email: team&#64;gmail.com
+        </div> -->
+      </div>
+      <div class="col-md-6 main-col-height">
+        <div class="centered-content-2 text-center" [ngClass]="{
+            'logo-page-right': !animateCircle,
+            'logo-page-left': animateCircle
+          }">
+          <img class="mb-3 text-shadows" src="./takeLibro/icon-book.png" width="130px" />
+          <div class="h1 text-white text-shadows">สร้างบัญชีสำหรับใช้งาน</div>
+          <div class="h1 text-white text-shadows">ระบบยืมหนังสือ</div>
+        </div>
+
+        <div class="register-form" [ngClass]="{
+            'fade-in-up': animateCircle,
+            'fade-out-down': !animateCircle
+          }">
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+            <div class="d-flex justify-content-center" style="position: relative">
+              <!-- prettier-ignore -->
+              <div class="d-flex justify-content-center">
+                <img class="object-fit-cover rounded-circle user-image"
+                  [src]="registerForm.get('image')?.value ? registerForm.get('image')?.value : './takeLibro/icon_user.png'"
+                  width="120px" height="120px" alt="icon user" (click)="fileInput.click()" />
+                <div class="rounded-circle icon-font-image" (click)="fileInput.click()">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <input type="file" #fileInput (change)="onImageSelect($event)" style="display: none;" />
+              </div>
+            </div>
+            <span class="d-block mt-3 text-center h5">สร้างบัญชีสำหรับใช้งาน</span>
+            <!-- end image -->
+            <div class="row mt-4">
+              <div class="col-md-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="firstName" [ngClass]="{ 'text-danger': validForm2('firstName') }">
+                    ชื่อ {{ validForm2("firstName") ? "*" : "" }}
+                  </label>
+                  <input id="firstName" type="text" [(ngModel)]="registerForm.value.firstName" formControlName="firstName" class="form-control login-input px-4"
+                    placeholder="First Name" />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="lastName" [ngClass]="{ 'text-danger': validForm2('lastName') }">นามสกุล {{
+                    validForm2("lastName") ? "*" : "" }}</label>
+                  <input id="lastName" type="text" [(ngModel)]="registerForm.value.lastName" formControlName="lastName" class="form-control login-input px-4"
+                    placeholder="Last Name" />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="email" [ngClass]="{ 'text-danger': validForm2('email') }">อีเมล
+                    {{ registerForm.get('email')?.errors?.['email'] ? '- รูปแบบอีเมลไม่ถูกต้อง' : '' }}
+                    {{ validForm2("email") ? "*" : "" }}
+                  </label>
+                  <input id="email" type="email" [(ngModel)]="registerForm.value.email" formControlName="email" class="form-control login-input px-4"
+                    placeholder="Email" />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-envelope text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="telephone" [ngClass]="{ 'text-danger': validForm2('telephone') }">
+                    โทรศัพท์
+                    {{ registerForm.get('telephone')?.errors?.['pattern'] ? '- หมายเลขโทรศัพท์ไม่ถูกต้อง' : '' }}
+                    {{ validForm2("telephone") ? "*" : "" }}
+                  </label>
+                  <input id="telephone" type="text" [(ngModel)]="registerForm.value.telephone" formControlName="telephone" class="form-control login-input px-4"
+                    placeholder="Telephone " />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-phone text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label for="password" [ngClass]="{ 'text-danger': validForm2('password') }">
+                    รหัสผ่าน
+                    {{ registerForm.get('password')?.errors?.['minlength'] ? '(อย่างน้อย 6 ตัวอักษร)' : '' }}
+                    {{ validForm2("password") ? "*" : "" }}
+                  </label>
+                  <input id="password" type="{{ vPWD2 ? 'text' : 'password' }}" [(ngModel)]="registerForm.value.password" formControlName="password"
+                    class="form-control login-input px-4" placeholder="Password" />
+                  <span class="register-icon2" (click)="statusPWD2()">
+                    <i class="fa-solid" [ngClass]="{
+                        'fa-eye': vPWD2,
+                        'fa-eye-slash': !vPWD2,
+                        'text-secondary': true
+                      }"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-md-6 mb-2 position-relative">
+                <div class="form-group">
+                  <!-- prettier-ignore -->
+                  <label for="confirmPwd"
+                    [ngClass]="{ 'text-danger': validForm2('confirmPwd') || isPasswordMismatch() }">
+                    ยืนยันรหัสผ่าน
+                    {{ registerForm.get('confirmPwd')?.errors?.['minlength'] ? '(อย่างน้อย 6 ตัวอักษร)' :
+                    isPasswordMismatch() ? "รหัสไม่ตรงกัน" : "" }}
+                    {{ validForm2("confirmPwd") || isPasswordMismatch() ? "*" : "" }}
+                  </label>
+                  <input id="confirmPwd" type="{{ vPWD3 ? 'text' : 'password' }}" [(ngModel)]="registerForm.value.confirmPwd" formControlName="confirmPwd"
+                    class="form-control login-input px-4" placeholder="Confirm Password" />
+                  <span class="register-icon2">
+                    <i class="{{
+                        vPWD3
+                          ? 'fa-solid fa-eye text-secondary'
+                          : 'fa-solid fa-eye-slash text-secondary'
+                      }}" (click)="statusPWD3()"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group mt-3 d-flex justify-content-center">
+              <button type="submit" class="btn login-btn">สร้างบัญชี</button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+              <span class="login-info" (click)="toggleAnimation()">ลงชื่อเข้าใช้งาน</span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- mobile -->
+  <div class="p-0 m-0 d-block d-lg-none">
+    <div class="row p-0 m-0">
+      <!-- login -->
+      <div class="col-12 main-col-height" *ngIf="!animateCircle">
+        <div
+          class="login-form"
+          [ngClass]="{
+            'fade-in-up': !animateCircle,
+            'fade-out-down': animateCircle
+          }"
+        >
+          <div class="d-flex justify-content-center">
+            <img src="./takeLibro/icon_user.png" alt="icon user" />
+          </div>
+          <span class="d-block mt-3 text-center h5 text-white"
+            >เข้าสู่ระบบ</span
+          >
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmitLogin()">
+            <div class="form-group mt-3 mb-2 position-relative">
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                [(ngModel)]="loginForm.value.email"
+                class="form-control login-input px-4"
+                placeholder="Email"
+              />
+              <span class="login-icon1">
+                <i class="fa-solid fa-user text-secondary"></i>
+              </span>
+            </div>
+            <!-- prettier-ignore -->
+            <div *ngIf="validForm1('email')" class="text-danger font-required">
+              <div *ngIf="loginForm.get('email')?.errors?.['required']">กรุณากรอก - อีเมล *</div>
+              <div *ngIf="loginForm.get('email')?.errors?.['email']">ที่อยู่อีเมลไม่ถูกต้อง *</div>
+            </div>
+            <div class="form-group mb-2 position-relative">
+              <input
+                id="password"
+                type="{{ vPWD1 ? 'text' : 'password' }}"
+                formControlName="password"
+                class="form-control login-input px-4"
+                [(ngModel)]="loginForm.value.password"
+                placeholder="Password"
+              />
+              <span class="login-icon2" (click)="statusPWD1()">
+                <i
+                  class="{{
+                    vPWD1
+                      ? 'fa-solid fa-eye text-secondary'
+                      : 'fa-solid fa-eye-slash text-secondary'
+                  }}"
+                ></i>
+              </span>
+            </div>
+            <!-- prettier-ignore -->
+            <div *ngIf="validForm1('password')" class="text-danger font-required">
+              <div *ngIf="loginForm.get('password')?.errors?.['required']">กรุณากรอก - รหัสผ่าน *</div>
+              <div *ngIf="loginForm.get('password')?.errors?.['minlength']">รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร *
+              </div>
+            </div>
+            <div class="d-flex justify-content-center">
+              <button type="submit" class="btn login-btn">เข้าสู่ระบบ</button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+              <span class="login-info" (click)="toggleAnimation()">สร้างบัญชี</span>
+              <span style="color: #16423C">&nbsp; / &nbsp;</span>
+              <span class="login-info" (click)="openDocManual()">คู่มือการใช้งาน</span>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- register -->
+      <div class="col-md-12 main-col-height" *ngIf="animateCircle">
+        <div
+          class="register-form-mobile"
+          [ngClass]="{
+            'fade-in-up': animateCircle,
+            'fade-out-down': !animateCircle
+          }"
+        >
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmitRegister()">
+            <div
+              class="d-flex justify-content-center"
+              style="position: relative"
+            >
+              <!-- prettier-ignore -->
+              <div class="d-flex justify-content-center">
+                <img class="object-fit-cover rounded-circle user-image shadows-box"
+                  [src]="registerForm.get('image')?.value   ? registerForm.get('image')?.value : './takeLibro/icon_user.png'"
+                  width="120px" height="120px" alt="icon user" (click)="fileInput.click()" />
+                <div class="rounded-circle icon-font-image" (click)="fileInput.click()">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </div>
+                <input type="file" #fileInput (change)="onImageSelect($event)" style="display: none;" />
+              </div>
+            </div>
+            <span class="d-block mt-3 text-center h5 text-white"
+              >สร้างบัญชีสำหรับใช้งาน</span
+            >
+            <!-- end image -->
+            <div class="row mt-4">
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="firstName"
+                    class="text-white"
+                    [ngClass]="{ 'text-danger': validForm2('firstName') }"
+                  >
+                    ชื่อ {{ validForm2("firstName") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    [(ngModel)]="registerForm.value.firstName"
+                    formControlName="firstName"
+                    class="form-control login-input px-4"
+                    placeholder="First Name"
+                  />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="lastName"
+                    class="text-white"
+                    [ngClass]="{ 'text-danger': validForm2('lastName') }"
+                    >นามสกุล {{ validForm2("lastName") ? "*" : "" }}</label
+                  >
+                  <input
+                    id="lastName"
+                    type="text"
+                    [(ngModel)]="registerForm.value.lastName"
+                    formControlName="lastName"
+                    class="form-control login-input px-4"
+                    placeholder="Last Name"
+                  />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-user text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="email"
+                    class="text-white"
+                    [ngClass]="{ 'text-danger': validForm2('email') }"
+                    >อีเมล
+                    {{ registerForm.get('email')?.errors?.['email'] ? '- รูปแบบอีเมลไม่ถูกต้อง' : '' }}
+                    {{ validForm2("email") ? "*" : "" }}</label
+                  >
+                  <input
+                    id="email"
+                    type="email"
+                    [(ngModel)]="registerForm.value.email"
+                    formControlName="email"
+                    class="form-control login-input px-4"
+                    placeholder="Email"
+                  />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-envelope text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="telephone"
+                    class="text-white text-nowrap"
+                    [ngClass]="{ 'text-danger': validForm2('telephone') }"
+                  >
+                    โทรศัพท์
+                    {{ registerForm.get('telephone')?.errors?.['pattern'] ? '- หมายเลขโทรศัพท์ไม่ถูกต้อง' : '' }}
+                    {{ validForm2("telephone") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="telephone"
+                    type="text"
+                    [(ngModel)]="registerForm.value.telephone"
+                    formControlName="telephone"
+                    class="form-control login-input px-4"
+                    placeholder="Telephone"
+                  />
+                  <span class="register-icon1">
+                    <i class="fa-solid fa-phone text-secondary"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <label
+                    for="password"
+                    class="text-white"
+                    [ngClass]="{ 'text-danger': validForm2('password') }"
+                  >
+                    รหัสผ่าน
+                    {{ registerForm.get('password')?.errors?.['minlength'] ? '(อย่างน้อย 6 ตัวอักษร)' : '' }}
+                    {{ validForm2("password") ? "*" : "" }}
+                  </label>
+                  <input
+                    id="password"
+                    type="{{ vPWD2 ? 'text' : 'password' }}"
+                    [(ngModel)]="registerForm.value.password"
+                    formControlName="password"
+                    class="form-control login-input px-4"
+                    placeholder="Password"
+                  />
+                  <span class="register-icon2" (click)="statusPWD2()">
+                    <i
+                      class="fa-solid"
+                      [ngClass]="{
+                        'fa-eye': vPWD2,
+                        'fa-eye-slash': !vPWD2,
+                        'text-secondary': true
+                      }"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-6 mb-2 position-relative">
+                <div class="form-group">
+                  <!-- prettier-ignore -->
+                  <label for="confirmPwd" class="text-white text-nowrap"
+                    [ngClass]="{ 'text-danger': validForm2('confirmPwd') || isPasswordMismatch() }">
+                    ยืนยันรหัสผ่าน
+                    {{ registerForm.get('confirmPwd')?.errors?.['minlength'] ? '(อย่างน้อย 6 ตัวอักษร)' :
+                    isPasswordMismatch() ? "รหัสไม่ตรงกัน" : "" }}
+                    {{ validForm2("confirmPwd") || isPasswordMismatch() ? "*" : "" }}
+                  </label>
+                  <input
+                    id="confirmPwd"
+                    type="{{ vPWD3 ? 'text' : 'password' }}"
+                    [(ngModel)]="registerForm.value.confirmPwd"
+                    formControlName="confirmPwd"
+                    class="form-control login-input px-4"
+                    placeholder="Confirm Password"
+                  />
+                  <span class="register-icon2">
+                    <i
+                      class="{{
+                        vPWD3
+                          ? 'fa-solid fa-eye text-secondary'
+                          : 'fa-solid fa-eye-slash text-secondary'
+                      }}"
+                      (click)="statusPWD3()"
+                    ></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group mt-3 d-flex justify-content-center">
+              <button type="submit" class="btn login-btn">สร้างบัญชี</button>
+            </div>
+            <div class="d-flex justify-content-center mt-3">
+              <span class="login-info" (click)="toggleAnimation()"
+                >ลงชื่อเข้าใช้งาน</span
+              >
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- end register -->
+    </div>
+  </div>
+</main>
+
+<!-- Modal Crop -->
+<div class="modal fade" id="cropModalRegister">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5)">
+      <div class="modal-header">
+        <h5 class="modal-title">แก้ไขขนาดรูปภาพ</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          id="closeModalCropRegister"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-center">
+          <image-cropper
+            style="max-height: 500px"
+            *ngIf="imageChangedEvent"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="1 / 1"
+            (imageCropped)="onCropRegister($event)"
+          ></image-cropper>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <app-button
+          type="button"
+          color="add"
+          [text]="'save' | translate"
+          icon=""
+          (click)="onSetCropRegister()"
+        ></app-button>
+
+        <app-button data-bs-dismiss="modal" color="cancel" text="ยกเลิก"></app-button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+.disble-form {
+  background-color: #e9ecef;
+  box-shadow: none;
+  border-color: #dee2e6;
+}
+
+::ng-deep .ngx-ic-cropper {
+  color: #ff0000 !important;
+  outline: var(--cropper-outline-color, rgba(255, 255, 255, 0.6)) solid 100vw !important;
+}

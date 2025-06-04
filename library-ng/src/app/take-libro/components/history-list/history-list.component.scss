@@ -1,0 +1,36 @@
+.input-group {
+  position: relative;
+  border-radius: 12%;
+}
+
+.input-group-text {
+  position: absolute;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.width-input {
+  width: 250px;
+}
+
+.action-btn {
+  width: 80px;
+  text-align: center;
+}
+
+.text-truncate-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+td {
+  height: 55px;
+}
